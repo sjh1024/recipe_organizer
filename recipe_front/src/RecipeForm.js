@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-
+import FileSelector from './FileSelect';
+import FolderSelector from './FolderSelect';
 class RecipeForm extends Component {
 
     render() {
@@ -78,7 +79,15 @@ class RecipeForm extends Component {
                         <h4>Instructions</h4>
                         <textarea id="instructions" />
                     </div>
-                </fieldset>
+                    </fieldset>
+                    <h2>Recipe from File(s)</h2>
+                    <fieldset >
+                       
+                        <div>
+                            <FileSelector />
+                            <FolderSelector />
+                        </div>
+                    </fieldset>
                
 
              

@@ -1,6 +1,4 @@
 import './App.css';
-import FileSelector from './FileSelect';
-import FolderSelector from './FolderSelect';
 import RecipeForm from './RecipeForm'
 
 function App() {
@@ -9,27 +7,26 @@ function App() {
         display: 'flex',
         flexDirection: 'column',
         
-      textAlign: 'left', // Align text left within the container
-      //margin: '0 20px', // Add margin to align with fieldset
+        textAlign: 'left', // Align text left within the container
+        //margin: '0 20px', // Add margin to align with fieldset
   };
     const titleStyle = {
       display: 'flex',
       textAlign: 'left',
       margin: '0 25% auto', // Reset margin to avoid extra spacing
-  };
+    };
+
+  
   return (
         <div className="App">
         <h1>Recipe Entry</h1>
           <div style={containerStyle}>
             <h2 style={titleStyle}>Manual Recipe Entry</h2>
-            <RecipeForm />
+              <RecipeForm />
+              
           </div>
-          <h2>Recipe from File(s)</h2>
-          <div>
-              <FileSelector/>
-              <FolderSelector/>
-          </div>
-         
+          
+        
           <div className="file_help">
             <ul>
               <li></li>
