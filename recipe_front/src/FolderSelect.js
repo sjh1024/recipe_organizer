@@ -30,7 +30,7 @@ class FolderSelector extends Component {
                     ref={this.fileInputRef}
                     style={{ display: 'none' }}
                 />
-                <button onClick={this.handleFileSelect}>Select File or Directory</button>
+                <button onClick={this.handleFileSelect}>Select Directory</button>
             </div>
         );
     }

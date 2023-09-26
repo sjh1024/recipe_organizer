@@ -1,16 +1,16 @@
 .App {
   text-align: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+label {
+    display: inline-block;
+    width: 100px; /* Adjust the width as needed for proper alignment */
+    text-align: left;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Apply left alignment to the radio buttons */
+input[type="radio"] {
+    margin-right: 5px; /* Add some spacing between the radio buttons and labels */
+    vertical-align: middle;
 }
 
 .App-header {
@@ -24,15 +24,4 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
