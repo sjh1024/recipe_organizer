@@ -60,6 +60,14 @@ class RecipeForm extends Component {
                         </fieldset>
 
                         <fieldset>
+                            <label for="season">Season</label>
+                            <select name="season" id="season">
+                                <option value="none">None</option>
+                                <option value="spring">Spring</option>
+                                <option value="summer">Summer</option>
+                                <option value="fall">Fall</option>
+                                <option value="winter">Winter</option>
+                            </select>
 
                         </fieldset>
                      </div>
