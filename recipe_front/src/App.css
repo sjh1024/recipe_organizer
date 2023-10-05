@@ -3,15 +3,15 @@
 }
 label {
     display: inline-block;
-    width: 100px; /* Adjust the width as needed for proper alignment */
+    padding-right:5px;
+    padding-left:5px;
+    padding-bottom:2px;
     text-align: left;
 }
 
-/* Apply left alignment to the radio buttons */
-input[type="radio"] {
-    margin-right: 5px; /* Add some spacing between the radio buttons and labels */
-    vertical-align: middle;
-}
+
+
+
 
 .App-header {
   background-color: #282c34;
