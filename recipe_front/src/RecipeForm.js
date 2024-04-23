@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { Component } from 'react';
 import FileSelector from './FileSelect';
 import FolderSelector from './FolderSelect';
@@ -31,6 +32,17 @@ class RecipeForm extends Component {
         event.preventDefault();
         // Handle form submission logic, e.g., send data to the server
         console.log('Form submitted with state:', this.state);
+
+        //TODO: find out what this endpoint will be
+        axios.post('http://your-django-api-endpoint', this.state)
+            .then(response => {
+                console.log('Form data sent successfully:', response.data);
+                // Handle successful response from the Django backend, if needed
+            })
+            .catch(error => {
+                console.error('Error sending form data:', error);
+                // Handle errors, if any
+            });
 
         this.setState({
             recipeName: '',
