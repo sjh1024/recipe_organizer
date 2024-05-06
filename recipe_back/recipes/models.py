@@ -7,6 +7,7 @@ from django.db import models
 '''
 It's worth noting that, at this point, 
 the following fields will cause "cascades" if they are deleted from the database:
+
 1. Ingredients
 2. Recipe Types
 3. Ingredient Types
@@ -17,7 +18,6 @@ the following fields will cause "cascades" if they are deleted from the database
 # the models represent the database layout...
 
 class RecipeType(models.Model):
-    # PKs should always be "auto fields", its an auto-incrementing int value
     recipe_type_id = models.AutoField(primary_key=True)
     recipe_type_name = models.CharField(max_length=100)
 
@@ -47,6 +47,6 @@ class Recipe(models.Model):
     recipe_comments = models.CharField(max_length=1000)
 
 
-class RecipeIngredients(models.Model):
+class RecipeIngredient(models.Model):
     recipe_id = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient_id = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
