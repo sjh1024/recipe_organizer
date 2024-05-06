@@ -2,25 +2,41 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import FileSelector from './FileSelect';
 import FolderSelector from './FolderSelect';
+
+/*
+this.state 
+    recipeName: '',
+    recipeDifficulty: 1,
+    recipeSeason: 'None',
+    recipeCategory: 'None',
+    recipeCourse: 'None',
+    recipeCuisine: 'None',
+    recipeIngredients: '',
+    recipeInstructions: '',
+    recipeNotes: ''
+};*/
+
 class RecipeForm extends Component {
     constructor(props) {
         super(props);
 
         //form field data is saved as "states" in react
         this.state = {
-            recipeName: '',
-            recipeDifficulty: 1,
-            recipeSeason: 'None',
-            recipeCategory: 'None',
-            recipeCourse: 'None',
-            recipeCuisine: 'None',
-            recipeIngredients: '',
-            recipeInstructions: '',
-            recipeNotes: ''
+            recipe_type_name: "",
+            current_ing_name: "",
+            current_ing_required: "False",
+
+            //this state is stored locally,
+            //all objects will be submitted at once to the db in several steps
+            recipe_ingredients: []
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+
+    }
+
+    componentDidMount() {
 
     }
 
@@ -29,12 +45,17 @@ class RecipeForm extends Component {
     }
 
     handleSubmit(event) {
-        event.preventDefault();
+        //event.preventDefault();
         // Handle form submission logic, e.g., send data to the server
-        console.log('Form submitted with state:', this.state);
+        console.log('Submitting the recipe template', this.state);
 
         //TODO: find out what this endpoint will be
-        axios.post('http://your-django-api-endpoint', this.state)
+        //it's going to be whatever will be used to submit all queries at once
+        //as a transaction
+        axios.post('http://localhost:8000/', this.state)
+            //this needs to change to some sort of success/failure screen,
+            //or empty screen
+            .get("http://localhost:8000/api/recipe_type_name")
             .then(response => {
                 console.log('Form data sent successfully:', response.data);
                 // Handle successful response from the Django backend, if needed
@@ -45,15 +66,13 @@ class RecipeForm extends Component {
             });
 
         this.setState({
-            recipeName: '',
-            recipeDifficulty: 1,
-            recipeSeason: 'None',
-            recipeCategory: 'None',
-            recipeCourse: 'None',
-            recipeCuisine: 'None',
-            recipeIngredients: '',
-            recipeInstructions: '',
-            recipeNotes: ''
+            recipe_type_name: "",
+            current_ing_name: "",
+            current_ing_required: "False",
+
+            //this state is stored locally,
+            //all objects will be submitted at once to the db in several steps
+            recipe_ingredients: []
         });
     }
 
@@ -77,19 +96,19 @@ class RecipeForm extends Component {
         };
 
 
-        
+
         const difficultyStyle = {
             display: 'flex',
             width: '50%', // Adjust the width as needed
             height: '20%', // Adjust the height as needed
             //alignItems: 'center',
-            justifyContent: 'space-between', 
-       
+            justifyContent: 'space-between',
+
         }
 
         const sliderStyle = {
-            
-            flexDirection:'column',
+
+            flexDirection: 'column',
         }
 
         const recipeAttributeStyle = {
@@ -98,153 +117,22 @@ class RecipeForm extends Component {
 
         }
 
-        const seasons = ['None', 'Spring', 'Summer', 'Fall', 'Winter']
+        /*const seasons = ['None', 'Spring', 'Summer', 'Fall', 'Winter']
         const ratingLabels = [1, 2, 3, 4, 5]
         const recipeCategories = ['None', 'Appetizers', 'Beverages', 'Salads', 'Soups and Stews', 'Cakes', 'Bars and Cookies', 'Breads', 'Condiments, Seasonings and Sauces', 'Fish and Seafood', 'Desserts',
             'Vegetables', 'Side Dishes', 'Grilling and Barbecue', 'Pizza', 'Sandwiches', 'Beef and Pork', 'Poultry', 'Snacks', 'Main Courses', 'Casseroles'].sort()
         const courses = ['None', 'Breakfast', 'Brunch', 'Lunch', 'Dinner', 'Snack', 'Dessert', 'Appetizer', 'Beverage'].sort()
         const cuisines = ['None', 'American', 'Asian', 'Chinese', 'Korean', 'Mexican', 'Tex-Mex', 'Indian', 'Japanese', 'French', 'Italian', 'Spanish', 'African', 'Vietnamese',
-                         'Thai'].sort()
+            'Thai'].sort()*/
+
         return (
             <div>
-                <form style={formStyle} onSubmit={this.handleSubmit}>
-                    <div style={recipeAttributeStyle}>
-                        <fieldset>
-                    
-                            <label htmlFor="rname" style={{ display: 'inline-block', float: 'left', width: '100px', textAlign: 'left', marginRight: '10px' }}>Recipe Name
-                                <span style={{ color: 'red' }}>*</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="rname"
-                                name="recipeName"
-                                style={{ float: 'left', width: '300px' }}
-                                value={this.state.recipeName}
-                                onChange={this.handleChange}
-                                required
-                            />
-                            <br />
-                   
-                            <div style={sliderStyle}>
-                                <label htmlFor="diff" >Difficulty
-                                    <span style={{ color: 'red' }}>*</span>
-                                </label>
-                                <input
-                                    type="range"
-                                    id="diff"
-                                    name="recipeDifficulty"
-                                    min="1"
-                                    max="5"
-                                    step="1"
-                                    style={difficultyStyle}
-                                    required
-                                    value={this.state.recipeDifficulty}
-                                    onChange={this.handleChange}
-                                />
-                          
-                    
-                                    <div style={difficultyStyle}>
-                                        {ratingLabels.map((label) => (
-                                        <span key={label}>{label}</span>
-                                        ))}
-                                    </div>
-                            </div>
-                            </fieldset>
-
-                            <fieldset style={{ width: '100%' }}>
-                                <div style={dropdownStyle}>
-                                <label htmlFor="season">Season</label>
-                                <select
-                                    name="recipeSeason"
-                                    id="season"
-                                    value={this.state.recipeSeason}
-                                    onChange={this.handleChange }
-                                >
-                                    {seasons.map((option) => (
-                                        <option key={option} value={option}>
-                                            {option}
-                                        </option>
-                                    ))}
-                                </select>
-
-                                <label htmlFor="category">Category</label>
-                                <select
-                                    name="recipeCategory"
-                                    id="category"
-                                    value={this.state.recipeCategory}
-                                    onChange={this.handleChange}
-                                >
-                                    {recipeCategories.map((option) => (
-                                        <option key={option} value={option}>
-                                            {option}
-                                        </option>
-                                    ))}
-                                </select>
-
-                                <br /><br />
-
-                                <label htmlFor="course">Course</label>
-                                <select
-                                    name="recipeCourse"
-                                    id="course"
-                                    value={this.state.recipeCourse}
-                                    onChange={this.handleChange}
-                                >
-                                    {courses.map((option) => (
-                                        <option key={option} value={option}>
-                                            {option}
-                                        </option>
-                                    ))}
-                                </select>
+                <form onSubmit={this.handleSubmit}>
 
 
-                                <label htmlFor="cuisine">Cuisine</label>
-                                <select
-                                    name="recipeCuisine"
-                                    id="cuisine"
-                                    value={this.state.recipeCuisine}
-                                    onChange={this.handleChange}
-                                >
-                                    {cuisines.map((option) => (
-                                        <option key={option} value={option}>
-                                            {option}
-                                        </option>
-                                    ))}
-                                </select>
-                                </div>
-                            </fieldset>
-                     </div>
-                <fieldset>  
-                    <div>
-                        <h4>Ingredients<span style={{ color: 'red' }}>*</span></h4>
-                            <textarea
-                                name="recipeIngredients"
-                                id="ingredients"
-                                value={this.state.recipeIngredients}
-                                onChange={this.handleChange}
-                                required
-                            />
-                        <h4>Instructions<span style={{ color: 'red' }}>*</span></h4>
-                            <textarea
-                                name="recipeInstructions"
-                                id="instructions"
-                                value={this.state.recipeInstructions}
-                                onChange={this.handleChange}
 
-                                required />
-                        <h4>Recipe Notes</h4>
-                            <textarea
-                                name="recipeNotes"
-                                id="notes"
-                                value={this.state.recipeNotes}
-                                onChange={this.handleChange} />
-                    </div>
-                    </fieldset>
                     <button type="submit">Submit</button>
-               
-
-             
-                {/* Submit button; submit the recipe to be parsed and possibly saved*/}
+                    {/* Submit button; submit the recipe to be parsed and possibly saved*/}
                 </form>
 
             </div>
