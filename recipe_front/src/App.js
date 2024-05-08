@@ -1,5 +1,6 @@
 import './App.css';
 //import Modal from "./components/Modal"
+import RecipeForm from './RecipeForm.js';
 import axios from 'axios'
 
 
@@ -21,10 +22,9 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Recipe Entry</h1>
+      <h1>New Recipe Template</h1>
       <div style={containerStyle}>
-        <h2 style={titleStyle}>Manual Recipe Entry</h2>
-
+      <RecipeForm/>
 
       </div>
 
