@@ -24,7 +24,7 @@ class RecipeForm extends Component {
         this.state = {
             recipe_type_name: "",
             current_ing_type_name: "",
-            current_ing_type_required: "False",
+            current_ing_type_required: false,
             
 
             //this state is stored locally,
@@ -47,11 +47,11 @@ class RecipeForm extends Component {
             window.alert("Please enter an ingredient type name.")
         }
         else{
-            const newIngredientType = [trimmed_ing_type_name, this.state.current_ing_type_name];
+            const newIngredientType = [trimmed_ing_type_name, this.state.current_ing_type_required];
             this.setState(prevState => ({
                 recipe_ing_types: [...prevState.recipe_ing_types, newIngredientType],
                 current_ing_type_name: "",
-                current_ing_type_required: "False"
+                current_ing_type_required: false
             }))
         }
     
@@ -108,14 +108,18 @@ class RecipeForm extends Component {
             <div>
                 <form>
 
-
-                    Recipe Type Name: <input type="text" value={this.state.recipe_type_name} onChange={(e)=> this.setState({recipe_type_name: e.target.value})} />
+                    <div className="namefields">
+                    <label for="rtype">Recipe Type Name:</label> <input type="text" id="rtype" value={this.state.recipe_type_name} onChange={(e)=> this.setState({recipe_type_name: e.target.value})} />
                     <br/>
-                    Ingredient Type Name: <input type="text" value={this.state.current_ing_type_name} onChange={(e)=> this.setState({current_ing_type_name: e.target.value})} />
+                    <label for="itype">Ingredient Type Name:</label> <input type="text" id="itype" value={this.state.current_ing_type_name} onChange={(e)=> this.setState({current_ing_type_name: e.target.value})} />
+                    <label for="reqd">Required?</label> <input type="checkbox" id="reqd" checked={this.state.current_ing_type_required} onChange={(e)=> this.setState({current_ing_type_required: e.target.value})} />
+                    
                     <button onClick={this.handleIngredientAddition}>Add</button>
+                    </div>
+                    
                     {/* Submit button; submit the recipe to be parsed and possibly saved*/}
-
-                    <div>
+                   
+                    <div className="ingtable">
                     <h2>Ingredient Types</h2>
                     <table>
                         <thead>
@@ -128,12 +132,13 @@ class RecipeForm extends Component {
                             {this.state.recipe_ing_types.map((ingredient, index) => (
                                 <tr key={index}>
                                     <td>{ingredient[0]}</td>
-                                    <td>{ingredient[1]}</td>
+                                    <td>{ingredient[1] ? "Yes" : "No"}</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                     </div>
+                    <button onClick="submit">Submit</button>
                 </form>
 
             </div>

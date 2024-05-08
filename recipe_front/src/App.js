@@ -23,7 +23,7 @@ function App() {
   return (
     <div className="App">
       <h1>New Recipe Template</h1>
-      <div style={containerStyle}>
+      <div>
       <RecipeForm/>
 
       </div>

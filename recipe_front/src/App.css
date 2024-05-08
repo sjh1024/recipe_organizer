@@ -3,13 +3,31 @@
 }
 label {
     display: inline-block;
-    padding-right:5px;
-    padding-left:5px;
-    padding-bottom:2px;
-    text-align: left;
+    max-width: 200px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
+form{
+  border: 1px dotted;
+  margin: auto 100px;
+}
+table, th, td {
+  border: 1px solid;
+  display: flex;
+}
 
+.ingtable{
+  padding-top:100px;
+  background-color:aquamarine;
+}
+
+.namefields {
+  display: flex;
+  width: 100px;
+  height: 3vh;
+  margin:50px;
+}
 
 
 
