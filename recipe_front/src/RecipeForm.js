@@ -127,16 +127,18 @@ class RecipeForm extends Component {
                         <div className="panel left-panel">
                             <h2>Add Ingredient Types</h2>
                     
-                            
-                            <label for="itype">Ingredient Type Name:</label>
-                            <input type="text" id="itype" value={this.state.current_ing_type_name} 
-                            onChange={(e)=> this.setState({current_ing_type_name: e.target.value})} />
-                    
-                            
-                            <label for="reqd">Required?</label> 
-                            <input type="checkbox" id="reqd" checked={this.state.current_ing_type_required} onChange={(e)=> this.setState({current_ing_type_required: e.target.value})} />
-                            <button onClick={this.handleIngredientAddition}>Add</button>
-
+                            <div className="left-panels-inputs">
+                                <input type="text" 
+                                id="itype"
+                                placeholder="Ingredient Type"
+                                value={this.state.current_ing_type_name} 
+                                onChange={(e)=> this.setState({current_ing_type_name: e.target.value})} />
+                        
+                                
+                                <label for="reqd">Required?</label> 
+                                <input type="checkbox" id="reqd" checked={this.state.current_ing_type_required} onChange={(e)=> this.setState({current_ing_type_required: e.target.value})} />
+                                <button onClick={this.handleIngredientAddition}>Add</button>
+                            </div>
                         </div>
                         <div className="panel right-panel">
                             <h2>Ingredient Types</h2>
