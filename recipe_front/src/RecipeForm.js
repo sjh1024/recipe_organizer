@@ -106,39 +106,68 @@ class RecipeForm extends Component {
 
         return (
             <div>
-                <form>
-
-                    <div className="namefields">
-                    <label for="rtype">Recipe Type Name:</label> <input type="text" id="rtype" value={this.state.recipe_type_name} onChange={(e)=> this.setState({recipe_type_name: e.target.value})} />
-                    <br/>
-                    <label for="itype">Ingredient Type Name:</label> <input type="text" id="itype" value={this.state.current_ing_type_name} onChange={(e)=> this.setState({current_ing_type_name: e.target.value})} />
-                    <label for="reqd">Required?</label> <input type="checkbox" id="reqd" checked={this.state.current_ing_type_required} onChange={(e)=> this.setState({current_ing_type_required: e.target.value})} />
-                    
-                    <button onClick={this.handleIngredientAddition}>Add</button>
+                <form className="form-container">
+                    <div className="top-panel">
+                        
+                        <div className= "text-box">
+                            <h2>Recipe Formula Name</h2> 
+                            <input 
+                                type="text" 
+                                id="rtype" 
+                                className="text-box"
+                                value={this.state.recipe_type_name} 
+                                onChange={(e)=> this.setState({recipe_type_name: e.target.value})} />
+                        </div>
+                        <div className="icon">
+                            <img src= "placeholder.png" ></img>
+                        </div>
                     </div>
+                    <div className="panels-container">
+                    
+                        <div className="panel left-panel">
+                            <h2>Add Ingredient Types</h2>
+                    
+                            
+                            <label for="itype">Ingredient Type Name:</label>
+                            <input type="text" id="itype" value={this.state.current_ing_type_name} 
+                            onChange={(e)=> this.setState({current_ing_type_name: e.target.value})} />
+                    
+                            
+                            <label for="reqd">Required?</label> 
+                            <input type="checkbox" id="reqd" checked={this.state.current_ing_type_required} onChange={(e)=> this.setState({current_ing_type_required: e.target.value})} />
+                            <button onClick={this.handleIngredientAddition}>Add</button>
+
+                        </div>
+                        <div className="panel right-panel">
+                            <h2>Ingredient Types</h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Ingredient Type Name</th>
+                                        <th>Required</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {this.state.recipe_ing_types.map((ingredient, index) => (
+                                        <tr key={index}>
+                                            <td>{ingredient[0]}</td>
+                                            <td>{ingredient[1] ? "\u2714" : "\u2718"}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        <br/>
+                    
+                        
+                       
+                 
                     
                     {/* Submit button; submit the recipe to be parsed and possibly saved*/}
                    
-                    <div className="ingtable">
-                    <h2>Ingredient Types</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Ingredient Type Name</th>
-                                <th>Required</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {this.state.recipe_ing_types.map((ingredient, index) => (
-                                <tr key={index}>
-                                    <td>{ingredient[0]}</td>
-                                    <td>{ingredient[1] ? "Yes" : "No"}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
                     </div>
-                    <button onClick="submit">Submit</button>
+                    
+                    {/*<button onClick="submit">Submit</button>*/}
                 </form>
 
             </div>

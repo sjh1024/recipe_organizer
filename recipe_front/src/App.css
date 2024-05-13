@@ -1,45 +1,99 @@
-.App {
-  text-align: center;
+body{
+  background-color: #fff0f3;
 }
-label {
-    display: inline-block;
-    max-width: 200px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+.formulaname{
+  border: 2px dashed;
+  margin-left:200px;
+  margin-right:200px;
 }
 
+.icon{
+  position: relative;
+  border: 2px dashed;
+  width: 200px;
+  height:200px;
+  margin-left: 50px;  
+
+  
+}
+.icon img{
+  width: 150px;
+  height: 150px;
+  max-width: 100%;
+  max-height: 100%;
+  
+}
 form{
   border: 1px dotted;
   margin: auto 100px;
+
 }
 table, th, td {
   border: 1px solid;
-  display: flex;
-}
-
-.ingtable{
-  padding-top:100px;
-  background-color:aquamarine;
-}
-
-.namefields {
-  display: flex;
-  width: 100px;
-  height: 3vh;
-  margin:50px;
 }
 
 
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+label {
+  text-overflow: ellipsis;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: 20px;
+  font-family: "Cooper Black";
+  color: #a4133c;
+}
+
+h1{
+  font-family: "Cooper Black";
+  color: #c9184a;
+}
+
+h2{
+  font-family: "Cooper Black";
+  color: #ff4d6d;
+}
+
+.formulaname {
+  position: absolute;
+  bottom: 0px;
 }
 
 
+.form-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.panels-container {
+  display: flex;
+  flex-direction: row;
+  height: 200px;
+}
+
+.panel {
+  flex: 1;
+  background-color: #ffccd5;
+  padding: 10px;
+}
+
+.left-panel {
+  margin-right: 10px; /* Add margin between panels */
+}
+
+.right-panel {
+  margin-left: 10px; /* Add margin between panels */
+}
+
+.top-panel {
+  background-color: #ffb3c1;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.text-box {
+  flex: 1;
+  margin-top: auto;
+
+}
