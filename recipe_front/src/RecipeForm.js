@@ -2,25 +2,61 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import FileSelector from './FileSelect';
 import FolderSelector from './FolderSelect';
+
+/*
+this.state 
+    recipeName: '',
+    recipeDifficulty: 1,
+    recipeSeason: 'None',
+    recipeCategory: 'None',
+    recipeCourse: 'None',
+    recipeCuisine: 'None',
+    recipeIngredients: '',
+    recipeInstructions: '',
+    recipeNotes: ''
+};*/
+
 class RecipeForm extends Component {
     constructor(props) {
         super(props);
 
         //form field data is saved as "states" in react
         this.state = {
-            recipeName: '',
-            recipeDifficulty: 1,
-            recipeSeason: 'None',
-            recipeCategory: 'None',
-            recipeCourse: 'None',
-            recipeCuisine: 'None',
-            recipeIngredients: '',
-            recipeInstructions: '',
-            recipeNotes: ''
+            recipe_type_name: "",
+            current_ing_type_name: "",
+            current_ing_type_required: false,
+            
+
+            //this state is stored locally,
+            //all objects will be submitted at once to the db in several steps
+            //state is a list of 2-tuples, containing the following info:
+            //ingredient_type_name(str), required(bool)
+            recipe_ing_types: []
+            
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleIngredientAddition = this.handleIngredientAddition.bind(this);
+
+    }
+    handleIngredientAddition(event){
+        event.preventDefault();
+        const trimmed_ing_type_name = this.state.current_ing_type_name.trim();
+        if(trimmed_ing_type_name.length === 0){
+            window.alert("Please enter an ingredient type name.")
+        }
+        else{
+            const newIngredientType = [trimmed_ing_type_name, this.state.current_ing_type_required];
+            this.setState(prevState => ({
+                recipe_ing_types: [...prevState.recipe_ing_types, newIngredientType],
+                current_ing_type_name: "",
+                current_ing_type_required: false
+            }))
+        }
+    
+    }
+    componentDidMount() {
 
     }
 
@@ -29,15 +65,23 @@ class RecipeForm extends Component {
     }
 
     handleSubmit(event) {
-        event.preventDefault();
+        //event.preventDefault();
         // Handle form submission logic, e.g., send data to the server
-        console.log('Form submitted with state:', this.state);
+        console.log('Submitting the recipe template', this.state);
 
         //TODO: find out what this endpoint will be
-        axios.post('http://your-django-api-endpoint', this.state)
+        //it's going to be whatever will be used to submit all queries at once
+        //as a transaction
+        axios.post('http://localhost:8000/', this.state)
+            //this needs to change to some sort of success/failure screen,
+            //or empty screen
+            .get("http://localhost:8000/api/recipe_type_name")
             .then(response => {
                 console.log('Form data sent successfully:', response.data);
                 // Handle successful response from the Django backend, if needed
+                /*
+                    Need to send the following to Django:
+                */
             })
             .catch(error => {
                 console.error('Error sending form data:', error);
@@ -45,206 +89,87 @@ class RecipeForm extends Component {
             });
 
         this.setState({
-            recipeName: '',
-            recipeDifficulty: 1,
-            recipeSeason: 'None',
-            recipeCategory: 'None',
-            recipeCourse: 'None',
-            recipeCuisine: 'None',
-            recipeIngredients: '',
-            recipeInstructions: '',
-            recipeNotes: ''
+            recipe_type_name: "",
+            current_ing_type_name: "",
+            current_ing_type_required: "False",
+
+            //this state is stored locally,
+            //all objects will be submitted at once to the db in several steps
+            recipe_ing_types: []
         });
     }
+    
 
 
     render() {
         // TODO: Move all this styling to App.css
-        const formStyle = {
-            display: 'flex',
-            flexDirection: 'column', // Align elements vertically
-            //alignItems: 'center', // Center horizontally
-            width: '50%',
-            margin: '0 auto', // Center the form horizontally
-        };
 
-        const dropdownStyle = {
-            display: 'flex',
-            flexDirection: 'column', // Align elements vertically
-            //alignItems: 'center', // Center horizontally
-            width: '75%',
-            margin: '0 auto', // Center the form horizontally
-        };
-
-
-        
-        const difficultyStyle = {
-            display: 'flex',
-            width: '50%', // Adjust the width as needed
-            height: '20%', // Adjust the height as needed
-            //alignItems: 'center',
-            justifyContent: 'space-between', 
-       
-        }
-
-        const sliderStyle = {
-            
-            flexDirection:'column',
-        }
-
-        const recipeAttributeStyle = {
-            display: 'flex',
-            flexDirection: 'row'
-
-        }
-
-        const seasons = ['None', 'Spring', 'Summer', 'Fall', 'Winter']
-        const ratingLabels = [1, 2, 3, 4, 5]
-        const recipeCategories = ['None', 'Appetizers', 'Beverages', 'Salads', 'Soups and Stews', 'Cakes', 'Bars and Cookies', 'Breads', 'Condiments, Seasonings and Sauces', 'Fish and Seafood', 'Desserts',
-            'Vegetables', 'Side Dishes', 'Grilling and Barbecue', 'Pizza', 'Sandwiches', 'Beef and Pork', 'Poultry', 'Snacks', 'Main Courses', 'Casseroles'].sort()
-        const courses = ['None', 'Breakfast', 'Brunch', 'Lunch', 'Dinner', 'Snack', 'Dessert', 'Appetizer', 'Beverage'].sort()
-        const cuisines = ['None', 'American', 'Asian', 'Chinese', 'Korean', 'Mexican', 'Tex-Mex', 'Indian', 'Japanese', 'French', 'Italian', 'Spanish', 'African', 'Vietnamese',
-                         'Thai'].sort()
         return (
             <div>
-                <form style={formStyle} onSubmit={this.handleSubmit}>
-                    <div style={recipeAttributeStyle}>
-                        <fieldset>
-                    
-                            <label htmlFor="rname" style={{ display: 'inline-block', float: 'left', width: '100px', textAlign: 'left', marginRight: '10px' }}>Recipe Name
-                                <span style={{ color: 'red' }}>*</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="rname"
-                                name="recipeName"
-                                style={{ float: 'left', width: '300px' }}
-                                value={this.state.recipeName}
-                                onChange={this.handleChange}
-                                required
-                            />
-                            <br />
-                   
-                            <div style={sliderStyle}>
-                                <label htmlFor="diff" >Difficulty
-                                    <span style={{ color: 'red' }}>*</span>
-                                </label>
-                                <input
-                                    type="range"
-                                    id="diff"
-                                    name="recipeDifficulty"
-                                    min="1"
-                                    max="5"
-                                    step="1"
-                                    style={difficultyStyle}
-                                    required
-                                    value={this.state.recipeDifficulty}
-                                    onChange={this.handleChange}
-                                />
-                          
-                    
-                                    <div style={difficultyStyle}>
-                                        {ratingLabels.map((label) => (
-                                        <span key={label}>{label}</span>
-                                        ))}
-                                    </div>
-                            </div>
-                            </fieldset>
-
-                            <fieldset style={{ width: '100%' }}>
-                                <div style={dropdownStyle}>
-                                <label htmlFor="season">Season</label>
-                                <select
-                                    name="recipeSeason"
-                                    id="season"
-                                    value={this.state.recipeSeason}
-                                    onChange={this.handleChange }
-                                >
-                                    {seasons.map((option) => (
-                                        <option key={option} value={option}>
-                                            {option}
-                                        </option>
-                                    ))}
-                                </select>
-
-                                <label htmlFor="category">Category</label>
-                                <select
-                                    name="recipeCategory"
-                                    id="category"
-                                    value={this.state.recipeCategory}
-                                    onChange={this.handleChange}
-                                >
-                                    {recipeCategories.map((option) => (
-                                        <option key={option} value={option}>
-                                            {option}
-                                        </option>
-                                    ))}
-                                </select>
-
-                                <br /><br />
-
-                                <label htmlFor="course">Course</label>
-                                <select
-                                    name="recipeCourse"
-                                    id="course"
-                                    value={this.state.recipeCourse}
-                                    onChange={this.handleChange}
-                                >
-                                    {courses.map((option) => (
-                                        <option key={option} value={option}>
-                                            {option}
-                                        </option>
-                                    ))}
-                                </select>
-
-
-                                <label htmlFor="cuisine">Cuisine</label>
-                                <select
-                                    name="recipeCuisine"
-                                    id="cuisine"
-                                    value={this.state.recipeCuisine}
-                                    onChange={this.handleChange}
-                                >
-                                    {cuisines.map((option) => (
-                                        <option key={option} value={option}>
-                                            {option}
-                                        </option>
-                                    ))}
-                                </select>
-                                </div>
-                            </fieldset>
-                     </div>
-                <fieldset>  
-                    <div>
-                        <h4>Ingredients<span style={{ color: 'red' }}>*</span></h4>
-                            <textarea
-                                name="recipeIngredients"
-                                id="ingredients"
-                                value={this.state.recipeIngredients}
-                                onChange={this.handleChange}
-                                required
-                            />
-                        <h4>Instructions<span style={{ color: 'red' }}>*</span></h4>
-                            <textarea
-                                name="recipeInstructions"
-                                id="instructions"
-                                value={this.state.recipeInstructions}
-                                onChange={this.handleChange}
-
-                                required />
-                        <h4>Recipe Notes</h4>
-                            <textarea
-                                name="recipeNotes"
-                                id="notes"
-                                value={this.state.recipeNotes}
-                                onChange={this.handleChange} />
+                <form className="form-container">
+                    <div className="top-panel">
+                        
+                        <div className= "text-box">
+                            <h2>Recipe Formula Name</h2> 
+                            <input 
+                                type="text" 
+                                id="rtype" 
+                                className="text-box"
+                                value={this.state.recipe_type_name} 
+                                onChange={(e)=> this.setState({recipe_type_name: e.target.value})} />
+                        </div>
+                        <div className="icon">
+                            <img src= "placeholder.png" ></img>
+                        </div>
                     </div>
-                    </fieldset>
-                    <button type="submit">Submit</button>
-               
-
-             
-                {/* Submit button; submit the recipe to be parsed and possibly saved*/}
+                    <div className="panels-container">
+                    
+                        <div className="panel left-panel">
+                            <h2>Add Ingredient Types</h2>
+                    
+                            <div className="left-panels-inputs">
+                                <input type="text" 
+                                id="itype"
+                                placeholder="Ingredient Type"
+                                value={this.state.current_ing_type_name} 
+                                onChange={(e)=> this.setState({current_ing_type_name: e.target.value})} />
+                        
+                                
+                                <label for="reqd">Required?</label> 
+                                <input type="checkbox" id="reqd" checked={this.state.current_ing_type_required} onChange={(e)=> this.setState({current_ing_type_required: e.target.value})} />
+                                <button onClick={this.handleIngredientAddition}>Add</button>
+                            </div>
+                        </div>
+                        <div className="panel right-panel">
+                            <h2>Ingredient Types</h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Ingredient Type Name</th>
+                                        <th>Required</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {this.state.recipe_ing_types.map((ingredient, index) => (
+                                        <tr key={index}>
+                                            <td>{ingredient[0]}</td>
+                                            <td>{ingredient[1] ? "\u2714" : "\u2718"}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        <br/>
+                    
+                        
+                       
+                 
+                    
+                    {/* Submit button; submit the recipe to be parsed and possibly saved*/}
+                   
+                    </div>
+                    
+                    {/*<button onClick="submit">Submit</button>*/}
                 </form>
 
             </div>

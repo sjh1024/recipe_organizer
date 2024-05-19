@@ -1,27 +1,108 @@
-.App {
-  text-align: center;
+body{
+  background-color: #fff0f3;
 }
+.formulaname{
+  border: 2px dashed;
+  margin-left:200px;
+  margin-right:200px;
+}
+
+.icon{
+  position: relative;
+  border: 2px dashed;
+  width: 200px;
+  height:200px;
+  margin-left: 50px;  
+
+  
+}
+.icon img{
+  width: 150px;
+  height: 150px;
+  max-width: 100%;
+  max-height: 100%;
+  
+}
+form{
+  margin: auto 100px;
+
+}
+table, th, td {
+  border: 1px solid;
+}
+
+
+
 label {
-    display: inline-block;
-    padding-right:5px;
-    padding-left:5px;
-    padding-bottom:2px;
-    text-align: left;
-}
-
-
-
-
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  text-overflow: ellipsis;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: 20px;
+  font-family: "Cooper Black";
+  color: #a4133c;
+}
+
+h1{
+  font-family: "Cooper Black";
+  color: #c9184a;
+}
+
+h2{
+  font-family: "Cooper Black";
+  color: #ff4d6d;
+  text-align: center;
 }
 
 
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.panels-container {
+  display: flex;
+  flex-direction: row;
+  height: 200px;
+}
+
+.panel {
+  flex: 1;
+  background-color: #ffccd5;
+  padding: 10px;
+}
+
+.left-panel {
+  margin-right: 0px; 
+ 
+  
+}
+
+.left-panels-inputs{
+  display: flex;
+  flex-direction: row; 
+}
+
+.right-panel {
+  margin-left: 5px; 
+  background-image: repeating-linear-gradient(180deg, transparent, transparent 42px, #800f2f 1px, #800f2f 44px);
+  background-color: #fff7f7;
+  border: solid #800f2f;
+  
+}
+
+.top-panel {
+  background-color: #ffb3c1;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  margin-bottom: 5px;
+}
+
+.text-box {
+  margin: auto;
+  justify-items: center;
+  justify-content: center;
+
+}
