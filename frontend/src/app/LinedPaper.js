@@ -3,11 +3,11 @@ import './papers.css';
 import React, { useState, Component } from 'react';
 
 
-const LinedPaper = ({ section_title, contents, col_names, field_names }) => {
-   const [tableState, setTableState] = useState(contents)
+const LinedPaper = ({ section_title, contents, col_names}) => {
+   
    //test state in comment below: 
    //[{name: "test", required: 0, thirdone: 123}, {name: "another", required: 1, thirdone: 12459}]
-   //console.log(tableState)
+
     return (
       <div className='lined-paper'>
       <h2>{section_title}</h2>
@@ -29,7 +29,7 @@ const LinedPaper = ({ section_title, contents, col_names, field_names }) => {
 </thead>
 
 <tbody>
-  {tableState.map((ingredient, index) => (
+  {contents.map((ingredient, index) => (
     <tr key={index}>
       {col_names.map((column, colIndex) => (
         <td

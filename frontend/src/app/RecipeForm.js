@@ -31,7 +31,11 @@ const RecipeForm = () => {
             window.alert("Please enter an ingredient type name.")
         }
         else{
-            const newIngredientType = [trimmedIngTypeName, currentIngTypeRequired]; 
+            const newIngredientType = {
+                name: trimmedIngTypeName,
+                required: currentIngTypeRequired.toString(),
+                thirdone: 'TBD'
+            }
             setRecipeIngTypes([...recipeIngTypes, newIngredientType]);
             setCurrentIngTypeName(""),
             setCurrentIngTypeRequired(false);
@@ -72,7 +76,7 @@ const RecipeForm = () => {
             recipe_ing_types: []
         });
     }
-    
+
     return (
         <div>
             <form className="form-container">
@@ -117,6 +121,7 @@ const RecipeForm = () => {
                                 { label: "Required?", field: "required" },
                                 { label: "Third One", field: "thirdone" }
                             ]}
+                          
                         />
                     
                 </div>
