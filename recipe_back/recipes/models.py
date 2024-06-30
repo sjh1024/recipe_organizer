@@ -22,6 +22,8 @@ the following fields will cause "cascades" if they are deleted from the database
 class RecipeType(models.Model):
     recipe_type_id = models.AutoField(primary_key=True)
     recipe_type_name = models.CharField(max_length=100)
+    def __str__(self):
+        return self.recipe_type_name
 
 # Make sure that you find a way to make it "difficult" to delete ingredients...
 
@@ -37,8 +39,11 @@ class IngredientType(models.Model):
     ing_type_id = models.AutoField(primary_key=True)
     # ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     ing_type_name = models.CharField(max_length=200)
-    recipe_type_id = models.ForeignKey(RecipeType, on_delete=models.CASCADE)
+    recipe_type_id = models.ForeignKey(RecipeType, related_name='formula_ingredients', on_delete=models.CASCADE)
     ing_type_required = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return self.ing_type_name
 
 # Recipe Requirement: A table for storing whether or not an ingredient type is required for a Recipe Type.
 # EXAMPLES: For a pizza, "Toppings" may not be required, but "Crust" is required.

@@ -22,8 +22,12 @@ class RecipeTypeEntryView(viewsets.ModelViewSet):
 @api_view(['POST'])
 def formula_submit(request):
     data = request.data
-    # print(data)
+    print(data)
     # Serializer for recipe type/formula (stores the name)
     serializer = RecipeTypeSerializer(data=request.data)
+    print(serializer.is_valid())
+    print(serializer.errors)
+    print(serializer.validated_data)
+    serializer.save()
 
     return Response({"status": "success"})

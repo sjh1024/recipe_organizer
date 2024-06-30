@@ -32,8 +32,8 @@ const RecipeForm = () => {
         }
         else{
             const newIngredientType = {
-                name: trimmedIngTypeName,
-                required: currentIngTypeRequired.toString(),
+                ing_type_name: trimmedIngTypeName,
+                ing_type_required: currentIngTypeRequired.toString(),
             }
             setRecipeIngTypes([...recipeIngTypes, newIngredientType]);
             setCurrentIngTypeName(""),
