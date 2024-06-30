@@ -34,7 +34,6 @@ const RecipeForm = () => {
             const newIngredientType = {
                 name: trimmedIngTypeName,
                 required: currentIngTypeRequired.toString(),
-                thirdone: 'TBD'
             }
             setRecipeIngTypes([...recipeIngTypes, newIngredientType]);
             setCurrentIngTypeName(""),
@@ -43,43 +42,52 @@ const RecipeForm = () => {
     };
 
     const handleSubmit = (event) => {
-        //event.preventDefault();
-        // Handle form submission logic, e.g., send data to the server
-        console.log('Submitting the recipe template', this.state);
+        event.preventDefault();
+        // TODO: actually get this hosted somewhere
+        const url = 'http://localhost:8000/api/submit_formula'
 
-        //TODO: find out what this endpoint will be
-        //it's going to be whatever will be used to submit all queries at once
-        //as a transaction
-        axios.post('http://localhost:8000/', this.state)
-            //this needs to change to some sort of success/failure screen,
-            //or empty screen
-            .get("http://localhost:8000/api/recipe_type_name")
+        const formData = {
+            recipe_type_name: recipeTypeName,
+            recipeIngTypes: recipeIngTypes,
+        };
+
+
+        // Handle form submission logic, e.g., send data to the server
+        console.log('Submitting the recipe formula', recipeIngTypes);
+        console.log('The recipe formula you submitted is named: ', recipeTypeName);
+        
+        // Perform the actual submission step
+        axios.post(url, formData)
+            //this needs to change to some sort of success/failure screen
+            //I think I want to have a confirmation page first, then submit
+            //This would be in handleSubmit, I think, then after you confirm on 
+            //THAT page, you submit.
+
+            //Make sure that, on that page, if you decide to go back,
+            //the old data is still there. 
+
             .then(response => {
                 console.log('Form data sent successfully:', response.data);
-                // Handle successful response from the Django backend, if needed
-                /*
-                    Need to send the following to Django:
-                */
+                // Reset states
+
+                setRecipeTypeName("");
+                setCurrentIngTypeName("");
+                setCurrentIngTypeRequired(false);
+                setRecipeIngTypes([]);
             })
             .catch(error => {
                 console.error('Error sending form data:', error);
                 // Handle errors, if any
             });
 
-        this.setState({
-            recipe_type_name: "",
-            current_ing_type_name: "",
-            current_ing_type_required: "False",
-
-            //this state is stored locally,
-            //all objects will be submitted at once to the db in several steps
-            recipe_ing_types: []
-        });
+        
+        
+    
     }
 
     return (
         <div>
-            <form className="form-container">
+            <form className="form-container" onSubmit={handleSubmit}>
                 <div className="top-panel">
                     
                     <div className= "text-box">
@@ -117,16 +125,15 @@ const RecipeForm = () => {
                             section_title="Current Formula"
                             contents={recipeIngTypes}
                             col_names={[
-                                { label: "Ingredient Name", field: "name" },
-                                { label: "Required?", field: "required" },
-                                { label: "Third One", field: "thirdone" }
+                                { label: "Ingredient Name", field: "ing_type_name" },
+                                { label: "Required?", field: "ing_type_required" }
                             ]}
                           
                         />
                     
                 </div>
             
-                {/*<button onClick="submit">Submit</button>*/}
+                {<button type="submit">Submit Formula!</button>}
             </form>
 
         </div>

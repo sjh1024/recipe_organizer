@@ -53,7 +53,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware"
 ]
-
+CORS_ALLOW_ALL_ORIGINS = True # TODO: RESTRICT BEFORE PUTTING INTO PRODUCTION
 ROOT_URLCONF = "recipe_back.urls"
 
 TEMPLATES = [

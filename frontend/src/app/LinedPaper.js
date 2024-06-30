@@ -4,9 +4,6 @@ import React, { useState, Component } from 'react';
 
 
 const LinedPaper = ({ section_title, contents, col_names}) => {
-   
-   //test state in comment below: 
-   //[{name: "test", required: 0, thirdone: 123}, {name: "another", required: 1, thirdone: 12459}]
 
     return (
       <div className='lined-paper'>
@@ -39,7 +36,10 @@ const LinedPaper = ({ section_title, contents, col_names}) => {
           }}
           key={colIndex}
         >
-          {ingredient[column.field]}
+          {/*TODO: Move this logic elsewhere, since it's specific to a specific use of LinedPaper.*/}
+           {column.field === 'ing_type_required' ?
+                  (ingredient[column.field] === 'true' ? '✓' : '✗') :
+                  ingredient[column.field]}
         </td>
       ))}
     </tr>
