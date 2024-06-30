@@ -1,5 +1,7 @@
 body{
   background-color: #fff0f3;
+  color: #800f2f;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
 }
 .formulaname{
   border: 2px dashed;
@@ -26,9 +28,6 @@ body{
 form{
   margin: auto 100px;
 
-}
-table, th, td {
-  border: 1px solid;
 }
 
 
@@ -60,11 +59,6 @@ h2{
   flex-direction: column;
 }
 
-.panels-container {
-  display: flex;
-  flex-direction: row;
-  height: 200px;
-}
 
 .panel {
   flex: 1;
@@ -72,24 +66,9 @@ h2{
   padding: 10px;
 }
 
-.left-panel {
-  margin-right: 0px; 
- 
-  
-}
 
-.left-panels-inputs{
-  display: flex;
-  flex-direction: row; 
-}
 
-.right-panel {
-  margin-left: 5px; 
-  background-image: repeating-linear-gradient(180deg, transparent, transparent 42px, #800f2f 1px, #800f2f 44px);
-  background-color: #fff7f7;
-  border: solid #800f2f;
-  
-}
+
 
 .top-panel {
   background-color: #ffb3c1;
