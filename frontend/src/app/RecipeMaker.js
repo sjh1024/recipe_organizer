@@ -1,46 +1,25 @@
+/*Need a form type selector*/
+
+
+
+/*From here, page will load with appropriate fields*/
+
+
 "use client"
 import React, {useState} from 'react';
 import axios from 'axios';
-import LinedPaper from './LinedPaper.js';
 
-/*
-this.state 
-    recipeName: '',
-    recipeDifficulty: 1,
-    recipeSeason: 'None',
-    recipeCategory: 'None',
-    recipeCourse: 'None',
-    recipeCuisine: 'None',
-    recipeIngredients: '',
-    recipeInstructions: '',
-    recipeNotes: ''
-};*/
+const RecipeMaker = () => {
 
-const RecipeForm = () => {
-
+    const [recipeType, setRecipeType] = useState("");
     const [recipeTypeName, setRecipeTypeName] = useState("");
-    const [currentIngTypeName, setCurrentIngTypeName] = useState("");
-    const [currentIngTypeRequired, setCurrentIngTypeRequired] = useState(false);
-    const [currentIngTypeMultiple, setCurrentIngTypeMultiple] = useState(true);
-    const [recipeIngTypes, setRecipeIngTypes] = useState([]);
+    const [recipeFormulaParts, setRecipeFormulaParts] = useState([]);
     
 
-    const handleIngredientAddition = (event) => {
+    const handleRecipeTypeSelection = (event) => {
         event.preventDefault();
-        const trimmedIngTypeName = currentIngTypeName.trim();
-        if(trimmedIngTypeName.length === 0){
-            window.alert("Please enter an ingredient type name.")
-        }
-        else{
-            const newIngredientType = {
-                ing_type_name: trimmedIngTypeName,
-                ing_type_required: currentIngTypeRequired.toString(),
-                ing_type_multiple: currentIngTypeMultiple.toString(),
-            }
-            setRecipeIngTypes([...recipeIngTypes, newIngredientType]);
-            setCurrentIngTypeName(""),
-            setCurrentIngTypeRequired(false);
-            setCurrentIngTypeMultiple(true);
+        setRecipeFormulaParts(event.value);
+           
         }
     };
 
@@ -56,8 +35,8 @@ const RecipeForm = () => {
 
 
         // Handle form submission logic, e.g., send data to the server
-        console.log('Submitting the recipe formula', recipeIngTypes);
-        console.log('The recipe formula you submitted is named: ', recipeTypeName);
+        console.log('Submitting the recipe', recipeIngTypes);
+        console.log('The recipe you submitted is named: ', recipeTypeName);
         
         // Perform the actual submission step
         axios.post(url, formData)

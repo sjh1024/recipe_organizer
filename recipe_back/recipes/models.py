@@ -40,8 +40,8 @@ class IngredientType(models.Model):
     # ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     ing_type_name = models.CharField(max_length=200, verbose_name="Ingredient Type Name")
     recipe_type_id = models.ForeignKey(RecipeType, related_name='formula_ingredients', on_delete=models.CASCADE, verbose_name="Related Recipe Formula")
-    ing_type_required = models.BooleanField(default=True, verbose_name="Required by Formula?")
-    
+    ing_type_required = models.BooleanField(default=False, verbose_name="Required by Formula?")
+    ing_type_multiple = models.BooleanField(default=True, verbose_name="Multiple of this Ingredient Allowed?")
     def __str__(self):
         return self.ing_type_name
 

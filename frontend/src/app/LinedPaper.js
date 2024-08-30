@@ -37,9 +37,10 @@ const LinedPaper = ({ section_title, contents, col_names}) => {
           key={colIndex}
         >
           {/*TODO: Move this logic elsewhere, since it's specific to a specific use of LinedPaper.*/}
-           {column.field === 'ing_type_required' ?
+           {column.field === 'ing_type_required' || column.field === 'ing_type_multiple' ?
                   (ingredient[column.field] === 'true' ? '✓' : '✗') :
-                  ingredient[column.field]}
+                  ingredient[column.field]
+           }
         </td>
       ))}
     </tr>
