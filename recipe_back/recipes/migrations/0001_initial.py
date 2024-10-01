@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name="RecipeType",
+            name="Formula",
             fields=[
                 ("recipe_type_id", models.AutoField(primary_key=True, serialize=False)),
                 ("recipe_type_name", models.CharField(max_length=100)),
@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                     "recipe_type_id",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="recipes.recipetype",
+                        to="recipes.Formula",
                     ),
                 ),
             ],
@@ -107,7 +107,7 @@ class Migration(migrations.Migration):
                     "recipe_type_id",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="recipes.recipetype",
+                        to="recipes.Formula",
                     ),
                 ),
             ],
@@ -116,7 +116,7 @@ class Migration(migrations.Migration):
             model_name="recipe",
             name="recipe_type_id",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="recipes.recipetype"
+                on_delete=django.db.models.deletion.CASCADE, to="recipes.Formula"
             ),
         ),
     ]

@@ -11,7 +11,7 @@ from recipes import views
 
 # router = routers.DefaultRouter()
 
-# router.register(r'recipe_type_name', views.RecipeTypeEntryView, basename='recipe_type_names')
+# router.register(r'recipe_type_name', views.FormulaEntryView, basename='recipe_type_names')
 
 
 
@@ -24,5 +24,6 @@ urlpatterns = [
     # when you visit the localhost:8000/api
     # you should be routed to the django Rest framework
     #path('api/', include(router.urls))
-    path('api/submit_formula', views.formula_submit, name='submit_formula')
+    path('api/submit_formula', views.formula_submit, name='submit_formula'),
+    path('api/submit_recipe', views.recipe_submit, name='submit_recipe')
 ]

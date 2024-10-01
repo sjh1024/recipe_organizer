@@ -19,9 +19,9 @@ the following fields will cause "cascades" if they are deleted from the database
 # the models represent the database layout...
 
 # Recipe Type: A recipe "Formula", it has an ID and a name. EXAMPLES: Pizza, Sandwich, Ice Cream, Smoothie...
-class RecipeType(models.Model):
-    recipe_type_id = models.AutoField(primary_key=True)
-    recipe_type_name = models.CharField(max_length=100, verbose_name="Recipe Formula Name")
+class Formula(models.Model):
+    formula_id = models.AutoField(primary_key=True)
+    formula_name = models.CharField(max_length=100, verbose_name="Recipe Formula Name")
     def __str__(self):
         return self.recipe_type_name
 
@@ -31,7 +31,9 @@ class RecipeType(models.Model):
 # EXAMPLES: Cheddar Cheese, Strawberry Jam, Furikake
 class Ingredient(models.Model):
     ingredient_id = models.AutoField(primary_key=True)
+    ing_type_id = models.ForeignKey(IngredientType, on_delete=models.CASCADE)
     ingredient_name = models.CharField(max_length=200)
+
 
 # Ingredient Type: A specific type of a "mix-in" in a broader category that can be a part of 1 or more recipes. 
 # EXAMPLES: Cheese, Sauce, Topping 
@@ -39,7 +41,7 @@ class IngredientType(models.Model):
     ing_type_id = models.AutoField(primary_key=True)
     # ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     ing_type_name = models.CharField(max_length=200, verbose_name="Ingredient Type Name")
-    recipe_type_id = models.ForeignKey(RecipeType, related_name='formula_ingredients', on_delete=models.CASCADE, verbose_name="Related Recipe Formula")
+    recipe_type_id = models.ForeignKey(Formula, related_name='formula_ingredients', on_delete=models.CASCADE, verbose_name="Related Recipe Formula")
     ing_type_required = models.BooleanField(default=False, verbose_name="Required by Formula?")
     ing_type_multiple = models.BooleanField(default=True, verbose_name="Multiple of this Ingredient Allowed?")
     def __str__(self):
@@ -48,7 +50,7 @@ class IngredientType(models.Model):
 # Recipe Requirement: A table for storing whether or not an ingredient type is required for a Recipe Type.
 # EXAMPLES: For a pizza, "Toppings" may not be required, but "Crust" is required.
 # class RecipeRequirement(models.Model):
-#    recipe_type_id = models.ForeignKey(RecipeType, on_delete=models.CASCADE)
+#    recipe_type_id = models.ForeignKey(Formula, on_delete=models.CASCADE)
 #    ing_type_id = models.ForeignKey(IngredientType, on_delete=models.CASCADE)
 #    required = models.BooleanField()
 
@@ -56,7 +58,7 @@ class IngredientType(models.Model):
 # EXAMPLES: Buffalo Chicken Pizza, Cookies n Cream Ice Cream, Italian Hero Sandwich
 class Recipe(models.Model):
     recipe_id = models.AutoField(primary_key=True)
-    recipe_type_id = models.ForeignKey(RecipeType, on_delete=models.CASCADE)
+    recipe_type_id = models.ForeignKey(Formula, on_delete=models.CASCADE)
     recipe_name = models.CharField(max_length=200)
     # should be a value from 1-5 or 1-10, seems like we cant control that here so must do it elsewhere
     recipe_rating = models.IntegerField()

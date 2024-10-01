@@ -40,12 +40,12 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="formula_ingredients",
-                to="recipes.recipetype",
+                to="recipes.Formula",
                 verbose_name="Related Recipe Formula",
             ),
         ),
         migrations.AlterField(
-            model_name="recipetype",
+            model_name="Formula",
             name="recipe_type_name",
             field=models.CharField(max_length=100, verbose_name="Recipe Formula Name"),
         ),

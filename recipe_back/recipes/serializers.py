@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import RecipeType, Ingredient, IngredientType, RecipeIngredient
+from .models import Formula, Ingredient, IngredientType, RecipeIngredient
 
 
 class IngredientTypeSerializer(serializers.ModelSerializer):
@@ -9,21 +9,21 @@ class IngredientTypeSerializer(serializers.ModelSerializer):
         fields = ["ing_type_name", "ing_type_required"]
 
    
-class RecipeTypeSerializer(serializers.ModelSerializer):
+class FormulaSerializer(serializers.ModelSerializer):
 
-    recipeIngTypes = IngredientTypeSerializer(many=True)
+    recipeFormulaParts = IngredientTypeSerializer(many=True)
 
     class Meta:
-        model = RecipeType
-        fields = ["recipe_type_name", "recipeIngTypes"]
+        model = Formula
+        fields = ["recipe_type_name", "recipeFormulaParts"]
     
     def create(self, validated_data):
-        formula_ingredient_data = validated_data.pop('recipeIngTypes')
+        formula_ingredient_data = validated_data.pop('recipeFormulaParts')
        
         print(f"Validated Data:{validated_data}")
         print(f"Formula Ingredient Data:{formula_ingredient_data}")
         
-        recipe_formula = RecipeType.objects.create(**validated_data)
+        recipe_formula = Formula.objects.create(**validated_data)
         
         print(f"Recipe Formula: {recipe_formula}")
         for ingredient_data in formula_ingredient_data:
@@ -33,22 +33,35 @@ class RecipeTypeSerializer(serializers.ModelSerializer):
             )
         return recipe_formula
 
-
-
-
-#class RecipeRequirementSerializer(serializers.ModelSerializer):
-    
-#    class Meta:
-#        model = RecipeRequirement
-#        fields = ["recipe_type_id", "ing_type_id", "required"]
-
-
-################################################################
-
 class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
         fields = ["ingredient_id", "ingredient_name"]
 
+
+
+class RecipeSerializer(serializers.ModelSerializer):
+
+    recipeParts = IngredientSerializer(many=True)
+
+    class Meta:
+        model = Recipe
+        fields = ["recipe_name", "ingredients"]
+    
+    def create(self, validated_data):
+        recipe_ingredient_data = validated_data.pop('recipeParts')
+       
+        print(f"Validated Data:{validated_data}")
+        print(f"Recipe Ingredient Data:{recipe_ingredient_data}")
+        
+        recipe = Recipe.objects.create(**validated_data)
+        
+        print(f"Recipe: {recipe}")
+        for ingredient_data in recipe_ingredient_data:
+            Ingredient.objects.create(
+               # ing_type_id=recipe_formula, 
+                **ingredient_data 
+            )
+        return recipe
 

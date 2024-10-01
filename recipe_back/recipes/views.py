@@ -4,27 +4,40 @@ from django.views import generic
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import viewsets
-from.serializers import RecipeTypeSerializer, IngredientTypeSerializer
+from.serializers import FormulaSerializer, IngredientTypeSerializer
 
-from .models import RecipeType
+from .models import Formula
 
 class IndexView(generic.ListView):
     template_name = "recipes/index.html"
 
-class RecipeTypeEntryView(viewsets.ModelViewSet):  
+class FormulaEntryView(viewsets.ModelViewSet):  
     
     # create serializer class
-    serializer_class = RecipeTypeSerializer
+    serializer_class = FormulaSerializer
 
     #define variable; populate it with objects
-    queryset = RecipeType.objects.all()
+    queryset = Formula.objects.all()
 
 @api_view(['POST'])
 def formula_submit(request):
     data = request.data
     print(data)
     # Serializer for recipe type/formula (stores the name)
-    serializer = RecipeTypeSerializer(data=request.data)
+    serializer = FormulaSerializer(data=request.data)
+    print(serializer.is_valid())
+    print(serializer.errors)
+    print(serializer.validated_data)
+    serializer.save()
+
+    return Response({"status": "success"})
+
+@api_view(['POST'])
+def recipe_submit(request):
+    data = request.data
+    print(data)
+    # Serializer for recipe type/formula (stores the name)
+    serializer = FormulaSerializer(data=request.data)
     print(serializer.is_valid())
     print(serializer.errors)
     print(serializer.validated_data)

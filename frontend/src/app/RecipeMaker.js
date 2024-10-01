@@ -9,34 +9,33 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 
-const RecipeMaker = () => {
+const FormulaForm = () => {
 
-    const [recipeType, setRecipeType] = useState("");
-    const [recipeTypeName, setRecipeTypeName] = useState("");
+    const [Formula, setFormula] = useState("");
+    const [FormulaName, setFormulaName] = useState("");
     const [recipeFormulaParts, setRecipeFormulaParts] = useState([]);
     
 
-    const handleRecipeTypeSelection = (event) => {
+    const handleFormulaSelection = (event) => {
         event.preventDefault();
         setRecipeFormulaParts(event.value);
            
-        }
-    };
-
+    }
+   
     const handleSubmit = (event) => {
         event.preventDefault();
         // TODO: actually get this hosted somewhere
         const url = 'http://localhost:8000/api/submit_formula'
 
         const formData = {
-            recipe_type_name: recipeTypeName,
-            recipeIngTypes: recipeIngTypes,
+            recipe_type_name: FormulaName,
+            recipeFormulaParts: recipeFormulaParts,
         };
 
 
         // Handle form submission logic, e.g., send data to the server
-        console.log('Submitting the recipe', recipeIngTypes);
-        console.log('The recipe you submitted is named: ', recipeTypeName);
+        console.log('Submitting the recipe', recipeFormulaParts);
+        console.log('The recipe you submitted is named: ', FormulaName);
         
         // Perform the actual submission step
         axios.post(url, formData)
@@ -52,11 +51,11 @@ const RecipeMaker = () => {
                 console.log('Form data sent successfully:', response.data);
                 // Reset states
 
-                setRecipeTypeName("");
+                setFormulaName("");
                 setCurrentIngTypeName("");
                 setCurrentIngTypeRequired(false);
                 setCurrentIngTypeMultiple(true);
-                setRecipeIngTypes([]);
+                setrecipeFormulaParts([]);
             })
             .catch(error => {
                 console.error('Error sending form data:', error);
@@ -79,8 +78,8 @@ const RecipeMaker = () => {
                             type="text" 
                             id="rtype" 
                             className="text-box"
-                            value={recipeTypeName} 
-                            onChange={(e)=> setRecipeTypeName(e.target.value)} />
+                            value={FormulaName} 
+                            onChange={(e)=> setFormulaName(e.target.value)} />
                     </div>
                     <div className="icon">
                         <img src= "placeholder.png" ></img>
@@ -113,7 +112,7 @@ const RecipeMaker = () => {
                         </div>
                         <LinedPaper
                             section_title="Current Formula"
-                            contents={recipeIngTypes}
+                            contents={recipeFormulaParts}
                             col_names={[
                                 { label: "Ingredient Name", field: "ing_type_name" },
                                 { label: "Required?", field: "ing_type_required" },
