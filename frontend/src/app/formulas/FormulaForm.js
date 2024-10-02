@@ -1,27 +1,49 @@
-/*Need a form type selector*/
-
-
-
-/*From here, page will load with appropriate fields*/
-
-
 "use client"
 import React, {useState} from 'react';
 import axios from 'axios';
+import LinedPaper from '../components/linedPaper/LinedPaper.js';
 
-const FormulaForm = () => {
+/*
+this.state 
+    recipeName: '',
+    recipeDifficulty: 1,
+    recipeSeason: 'None',
+    recipeCategory: 'None',
+    recipeCourse: 'None',
+    recipeCuisine: 'None',
+    recipeIngredients: '',
+    recipeInstructions: '',
+    recipeNotes: ''
+};*/
 
-    const [Formula, setFormula] = useState("");
+const RecipeForm = () => {
+
     const [FormulaName, setFormulaName] = useState("");
-    const [recipeFormulaParts, setRecipeFormulaParts] = useState([]);
+    const [currentIngTypeName, setCurrentIngTypeName] = useState("");
+    const [currentIngTypeRequired, setCurrentIngTypeRequired] = useState(false);
+    const [currentIngTypeMultiple, setCurrentIngTypeMultiple] = useState(true);
+    const [recipeFormulaParts, setrecipeFormulaParts] = useState([]);
     
 
-    const handleFormulaSelection = (event) => {
+    const handleIngredientAddition = (event) => {
         event.preventDefault();
-        setRecipeFormulaParts(event.value);
-           
-    }
-   
+        const trimmedIngTypeName = currentIngTypeName.trim();
+        if(trimmedIngTypeName.length === 0){
+            window.alert("Please enter an ingredient type name.")
+        }
+        else{
+            const newIngredientType = {
+                ing_type_name: trimmedIngTypeName,
+                ing_type_required: currentIngTypeRequired.toString(),
+                ing_type_multiple: currentIngTypeMultiple.toString(),
+            }
+            setrecipeFormulaParts([...recipeFormulaParts, newIngredientType]);
+            setCurrentIngTypeName(""),
+            setCurrentIngTypeRequired(false);
+            setCurrentIngTypeMultiple(true);
+        }
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         // TODO: actually get this hosted somewhere
@@ -34,8 +56,8 @@ const FormulaForm = () => {
 
 
         // Handle form submission logic, e.g., send data to the server
-        console.log('Submitting the recipe', recipeFormulaParts);
-        console.log('The recipe you submitted is named: ', FormulaName);
+        console.log('Submitting the recipe formula', recipeFormulaParts);
+        console.log('The recipe formula you submitted is named: ', FormulaName);
         
         // Perform the actual submission step
         axios.post(url, formData)
