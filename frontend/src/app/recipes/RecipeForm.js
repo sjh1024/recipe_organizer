@@ -1,179 +1,132 @@
 "use client"
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
-/**
- * An IngredientField is an object/field entry item representing an Ingredient in a Recipe.
- * 
- * As such, the Ingredient Field has the following pieces of info:
- * 
- * 1. Ingredient Name
- * 2. Ingredient Type
- * 
- */
-
-/** 
- * 
- * An IngredientList is a list of Ingredients for a specific Recipe of a specific Formula.
- * 
- * It has multiple "lists" of items that come from IngredientFields; some of which can have multiple elements, some that can't (depends on the recipe data).
- * 
- */
-
-
 const RecipeForm = () => {
-      const initializeIngredientList = () => {
-        const ingredientSublists = ingredientTypeData.reduce((acc, item) => {
-            acc[item.ingredient_type_id] = {
-              ingredient_type_name: item.ingredient_type_name,
-              ingredient_list: []
-            };
-            return acc;
-          }, {});
-        
-          
-          return ingredientSublists;
+  const [recipeName, setRecipeName] = useState("");
+  const [ingredientTypeData, setIngredientTypeData] = useState([
+    { ingredient_type_id: "1001", ingredient_type_name: "a" },
+    { ingredient_type_id: "1002", ingredient_type_name: "b" },
+    { ingredient_type_id: "1003", ingredient_type_name: "c" }
+  ]);
+  const [currentIngName, setCurrentIngName] = useState("");
+  const [currentIngTypeId, setCurrentIngTypeId] = useState("");
+  const [formulaList, setFormulaList] = useState(["1", "2", "3"]);
+  const [selectedFormula, setSelectedFormula] = useState("");
+  const [selectedIngredientType, setSelectedIngredientType] = useState("");
 
-    }
+  const initializeIngredientList = () => {
+    return ingredientTypeData.reduce((acc, item) => {
+      acc[item.ingredient_type_id] = {
+        ingredient_type_name: item.ingredient_type_name,
+        ingredient_list: []
+      };
+      return acc;
+    }, {});
+  };
 
-    const [recipeName, setRecipeName] = useState("");
-    const [ingredientTypeData, setIngredientTypeData] = useState([
-        { ingredient_type_id: "1001", ingredient_type_name: "a" },
-        { ingredient_type_id: "1002", ingredient_type_name: "b" },
-        { ingredient_type_id: "1003", ingredient_type_name: "c" }
-      ]);
-    const [currentIngName, setCurrentIngName] = useState(""); 
-    const [currentIngType, setCurrentIngType] = useState(""); //ing type should be an object: has a name and an id
-    const [currentIngTypeId, setCurrentIngTypeId] = useState("");
+  const [recipeIngredients, setRecipeIngredients] = useState(initializeIngredientList);
 
-    const [ingredientTypeList, setIngredientTypeList] = useState(["a", "b", "c"])
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const url = 'http://localhost:8000/api/submit_recipe';
 
-    const [recipeIngredients, setRecipeIngredients] = useState(() => initializeIngredientList());  //list of 2-tuples containing ingredient type id and ingredient type name, ingredient_name
-    /*
-        const categories = [
-            "ingredient_type_id": {
-                ingredient_type_name: "Ingredient Type 1",
-                ingredient_list: ["item1", "item2"]
-            }
-        ];
-    */
-
-    const [formulaList, setFormulaList] = useState(["1", "2", "3"]);
-  
-
-    const [selectedFormula, setSelectedFormula] = useState("");
-    const [selectedIngredientType, setSelectedIngredientType] = useState("");
-    
-
-    //const [currentIngTypeMultiple, setCurrentIngTypeMultiple] = useState(true);
-   
-  
-    const handleIngredientAddition = (event) => {
-        event.preventDefault();
-       
-        const trimmedIngName = currentIngName.trim();
-        const trimmedIngTypeName = currentIngType.trim();
-        if(trimmedIngName.length === 0){
-            window.alert("Please enter an ingredient type name.")
-        }
-        else{
-      
-            const updatedList = {...recipeIngredients};
-            
-            //no need to check list types since it should be populated whenever you select a Formula.
-            console.log(updatedList);
-            console.log(updatedList[currentIngTypeId]);
-            console.log(currentIngTypeId);
-            updatedList[currentIngTypeId] = {
-                ingredient_list: [
-                    ...updatedList[currentIngTypeId].ingredient_list, trimmedIngTypeName
-                ]
-
-            };
-
-            setRecipeIngredients(updatedList);
-            setCurrentIngName(""),
-            setCurrentIngType("");
-            setCurrentIngTypeId(0);
-        }
-        console.log(ingredientTypeList);
+    const formData = {
+      recipe_name: recipeName,
+      recipeIngredients: recipeIngredients,
     };
 
-    const handleIngredientTypeChange = (event) => {
-        //event.preventDefault();
-        setCurrentIngTypeId(event.target.value);
-        
-        
-    
+    axios.post(url, formData)
+      .then(response => {
+        console.log('Recipe submitted:', response.data);
+      })
+      .catch(error => {
+        console.error('Error submitting recipe:', error);
+      });
+  };
+
+  const handleIngredientAddition = (event) => {
+    event.preventDefault();
+    const trimmedName = currentIngName.trim();
+
+    if (!trimmedName) {
+      alert("Please enter an ingredient name.");
+      return;
     }
 
+    if (!currentIngTypeId || !recipeIngredients[currentIngTypeId]) {
+      alert("Please select a valid ingredient type.");
+      return;
+    }
 
+    setRecipeIngredients(prev => ({
+      ...prev,
+      [currentIngTypeId]: {
+        ...prev[currentIngTypeId],
+        ingredient_list: [...prev[currentIngTypeId].ingredient_list, trimmedName]
+      }
+    }));
 
-    return (
-        <div>
+    setCurrentIngName("");
+    setCurrentIngTypeId("");
+  };
 
-            <form className="form-container" onSubmit={handleSubmit}>
-                        {/*Selects from the possible formula types*/}
-                     
-                        <label htmlFor="formula">Recipe Formula:</label>
+  return (
+    <div>
+      <form className="form-container" onSubmit={handleSubmit}>
+        <label htmlFor="formula">Recipe Formula:</label>
+        <select
+          id="formula"
+          value={selectedFormula}
+          onChange={(e) => setSelectedFormula(e.target.value)}
+        >
+          {formulaList.map((formula, index) => (
+            <option key={index} value={formula}>{formula}</option>
+          ))}
+        </select>
 
-                            <select id="formula" value={selectedFormula} onChange={(e) => setSelectedFormula(e.target.value)}>
-                            {formulaList.map((formula, index) => (
-                             <option key={index} value={formula}>
-                                {formula}
-                             </option>
-                            ))}
-                            </select>
+        <label htmlFor="ingredient">Ingredient Name:</label>
+        <input
+          type="text"
+          id="ingredient"
+          placeholder="Ingredient Name"
+          value={currentIngName}
+          onChange={(e) => setCurrentIngName(e.target.value)}
+        />
 
-                            <label htmlFor="ingredient">Ingredient Name:</label>
-                     
-                            <input type="text" 
-                            id="ingredient"
-                            placeholder="Ingredient Name"
-                            value={currentIngName} 
-                            onChange={(e)=> setCurrentIngName(e.target.value)} />      
+        <label htmlFor="ingredienttype">Ingredient Type:</label>
+        <select
+          id="ingredienttype"
+          value={currentIngTypeId}
+          onChange={(e) => setCurrentIngTypeId(e.target.value)}
+        >
+          <option value="">Select type</option>
+          {ingredientTypeData.map((ingredient, index) => (
+            <option key={index} value={ingredient.ingredient_type_id}>
+              {ingredient.ingredient_type_name}
+            </option>
+          ))}
+        </select>
 
-                            <label htmlFor="ingredienttype">Ingredient Type:</label>
+        <button onClick={handleIngredientAddition}>Add Ingredient</button>
+        <button type="submit">Submit Recipe!</button>
+      </form>
 
-                            <select id="ingredienttype" value={selectedIngredientType} onChange={(e) => setCurrentIngTypeId(e)}>
-                            {ingredientTypeData.map((ingredient, index) => (
-                             <option key={index} value={ingredient.ingredient_type_id}>
-                                {ingredient.ingredient_type_name}
-                             </option>
-                            ))}
-                            </select>
-                                        
-                            <button onClick={handleIngredientAddition}>Add Ingredient</button>
-              
-                        
-                
-                {<button type="submit">Submit Recipe!</button>}
-            </form>
-
-            <div>
-            <label htmlFor="ingredienttype">Ingredient Type:</label>
-
-          
-            {ingredientTypeList.map((ingredient, index) => (
-                
-             <div key={index}>
-             <h2>{ingredient}</h2>
-             <ul>
-                       {/* Assuming you have a separate mapping for items related to each ingredient 
-                       {itemsByIngredient[ingredient].map((item, itemIndex) => (
-                        <li key={itemIndex}>{item}</li> // List each item under its respective heading
-                    ))}*/}
-
-             </ul>
-             </div>
-            ))}
-        
-                
-            </div>
-
-        </div>
-    );
-    
-}
+      <div>
+        <h3>Current Ingredients</h3>
+        {Object.entries(recipeIngredients).map(([typeId, typeData]) => (
+          <div key={typeId}>
+            <h4>{typeData.ingredient_type_name}</h4>
+            <ul>
+              {typeData.ingredient_list.map((item, idx) => (
+                <li key={idx}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default RecipeForm;

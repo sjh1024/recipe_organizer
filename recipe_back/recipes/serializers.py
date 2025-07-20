@@ -45,9 +45,12 @@ class FormulaSerializer(serializers.ModelSerializer):
         print(f"Validated Data:{validated_data}")
         print(f"Formula Ingredient Data:{formula_ingredient_data}")
         
+        # This step creates the actual Formula in the Formula table.
         recipe_formula = Formula.objects.create(**validated_data)
         
         print(f"Recipe Formula: {recipe_formula}")
+
+        # This step creates all the associated Ingredient Types for the Formula.
         for ingredient_data in formula_ingredient_data:
             IngredientType.objects.create(
                 formula=recipe_formula, 

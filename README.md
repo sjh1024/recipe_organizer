@@ -30,3 +30,9 @@ http://localhost:3000
 ### 1. Recipe Formulas
 
 ### 2. 
+
+## Notes
+
+### Django
+
+* Django ForeignKeys are Objects, *not* primary keys. So they should be named accordingly (i.e. without _id suffix)
