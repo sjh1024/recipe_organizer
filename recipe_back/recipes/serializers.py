@@ -30,10 +30,10 @@ class IngredientTypeSerializer(serializers.ModelSerializer):
         model = IngredientType
         fields = ["ing_type_name", "ing_type_required"]
 
-   
+# TODO: Make separate serializers for submitting and retrieving formulas. 
 class FormulaSerializer(serializers.ModelSerializer):
 
-    recipeFormulaParts = IngredientTypeSerializer(many=True)
+    recipeFormulaParts = IngredientTypeSerializer(source='formula_ingredients', many=True)
 
     class Meta:
         model = Formula

@@ -4,8 +4,7 @@ from django.views import generic
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import viewsets
-from.serializers import FormulaSerializer, IngredientTypeSerializer
-
+from .serializers import FormulaSerializer, IngredientTypeSerializer 
 from .models import Formula
 
 class IndexView(generic.ListView):
@@ -44,3 +43,9 @@ def recipe_submit(request):
     serializer.save()
 
     return Response({"status": "success"})
+
+# FormulaViewSet is needed to read Formulas into the React frontend
+# for new recipe submission.
+class FormulaViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Formula.objects.all()
+    serializer_class = FormulaSerializer

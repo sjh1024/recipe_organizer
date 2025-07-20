@@ -1,31 +1,34 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import axios from 'axios';
 
 const RecipeForm = () => {
   const [recipeName, setRecipeName] = useState("");
-  const [ingredientTypeData, setIngredientTypeData] = useState([
-    { ingredient_type_id: "1001", ingredient_type_name: "a" },
-    { ingredient_type_id: "1002", ingredient_type_name: "b" },
-    { ingredient_type_id: "1003", ingredient_type_name: "c" }
-  ]);
+  const [ingredientTypeData, setIngredientTypeData] = useState([]);
   const [currentIngName, setCurrentIngName] = useState("");
   const [currentIngTypeId, setCurrentIngTypeId] = useState("");
-  const [formulaList, setFormulaList] = useState(["1", "2", "3"]);
+  const [formulaList, setFormulaList] = useState([]);
   const [selectedFormula, setSelectedFormula] = useState("");
   const [selectedIngredientType, setSelectedIngredientType] = useState("");
+  const [loadingFormulas, setLoadingFormulas] = useState(true);
+  const [error, setError] = useState(null);
+  const [recipeIngredients, setRecipeIngredients] = useState([]);
 
-  const initializeIngredientList = () => {
-    return ingredientTypeData.reduce((acc, item) => {
-      acc[item.ingredient_type_id] = {
-        ingredient_type_name: item.ingredient_type_name,
-        ingredient_list: []
-      };
-      return acc;
-    }, {});
-  };
+  // Fetch formulas on mount
 
-  const [recipeIngredients, setRecipeIngredients] = useState(initializeIngredientList);
+  useEffect(() => {
+    axios.get("http://localhost:8000/api/formulas/")
+        .then((response) => {
+            setFormulaList(response.data);
+            console.log(response.data);
+            setLoadingFormulas(false);
+        })
+        .catch((err) => {
+            console.error("Error fetching formulas:", err);
+            setError("Failed to load formulas");
+            setLoadingFormulas(false);
+        });
+  }, []);  
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -71,19 +74,59 @@ const RecipeForm = () => {
     setCurrentIngTypeId("");
   };
 
+  const handleFormulaChange = (e) => {
+    const selectedName = e.target.value;
+    setSelectedFormula(selectedName);
+    
+    const selectedFormulaObject = formulaList.find(
+        (f) => f.formula_name === selectedName
+    );
+
+    if (selectedFormulaObject) {
+        const parts = selectedFormulaObject.recipeFormulaParts || [];
+        console.log(parts);
+        
+        // Generate ingredient type list (give fallback ID if not available)
+        const ingredientTypes = parts.map((part, index) => ({
+            ingredient_type_id: `${index}`,
+            ingredient_type_name: part.ing_type_name
+        }));
+        console.log(ingredientTypes);
+        setIngredientTypeData(ingredientTypes);
+        console.log(ingredientTypeData);
+        /*
+        const initialized = ingredientTypes.reduce((acc, item) => {
+            acc[item.ingredient_type_id] = {
+                ingredient_type_name: item.ingredient_type_name,
+                ingredient_list: []
+            };
+            return acc;
+        }, {});
+    setRecipeIngredients(initialized);*/
+    }
+  }
+
   return (
     <div>
       <form className="form-container" onSubmit={handleSubmit}>
         <label htmlFor="formula">Recipe Formula:</label>
+        {loadingFormulas ? (
+            <p>Loading...</p>
+        ) : error ? (
+            <p>{error}</p>
+        ) : (
+       
         <select
           id="formula"
           value={selectedFormula}
-          onChange={(e) => setSelectedFormula(e.target.value)}
+          onChange={handleFormulaChange}
         >
           {formulaList.map((formula, index) => (
-            <option key={index} value={formula}>{formula}</option>
+            <option key={index} value={formula.formula_name}>{formula.formula_name}</option>
           ))}
         </select>
+
+        )}
 
         <label htmlFor="ingredient">Ingredient Name:</label>
         <input
@@ -114,15 +157,17 @@ const RecipeForm = () => {
 
       <div>
         <h3>Current Ingredients</h3>
-        {Object.entries(recipeIngredients).map(([typeId, typeData]) => (
+        {Object.entries(ingredientTypeData).map(([typeId, typeData]) => (
           <div key={typeId}>
             <h4>{typeData.ingredient_type_name}</h4>
-            <ul>
+            {/*} <ul>
               {typeData.ingredient_list.map((item, idx) => (
                 <li key={idx}>{item}</li>
               ))}
             </ul>
+            */}
           </div>
+
         ))}
       </div>
     </div>

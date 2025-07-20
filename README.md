@@ -36,3 +36,4 @@ http://localhost:3000
 ### Django
 
 * Django ForeignKeys are Objects, *not* primary keys. So they should be named accordingly (i.e. without _id suffix)
+* Use ViewSets to allow the React/frontend of the application to view the contents of the Django database/a specific table/etc.
