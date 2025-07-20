@@ -62,13 +62,21 @@ const RecipeForm = () => {
       return;
     }
 
-    setRecipeIngredients(prev => ({
-      ...prev,
-      [currentIngTypeId]: {
-        ...prev[currentIngTypeId],
-        ingredient_list: [...prev[currentIngTypeId].ingredient_list, trimmedName]
-      }
-    }));
+    setIngredientTypeData(prev =>
+        prev.map((item) =>
+          item.ingredient_type_id === currentIngTypeId
+            ? {
+                ...item,
+                ingredient_list: [...item.ingredient_list, trimmedName],
+              }
+            : item
+        )
+      );
+
+    console.log(currentIngTypeId);
+    console.log(trimmedName);
+
+    console.log(ingredientTypeData);
 
     setCurrentIngName("");
     setCurrentIngTypeId("");
@@ -84,17 +92,15 @@ const RecipeForm = () => {
 
     if (selectedFormulaObject) {
         const parts = selectedFormulaObject.recipeFormulaParts || [];
-        console.log(parts);
         
         // Generate ingredient type list (give fallback ID if not available)
         const ingredientTypes = parts.map((part, index) => ({
             ingredient_type_id: `${index}`,
-            ingredient_type_name: part.ing_type_name
+            ingredient_type_name: part.ing_type_name,
+            ingredient_list: []
         }));
-        console.log(ingredientTypes);
         setIngredientTypeData(ingredientTypes);
-        console.log(ingredientTypeData);
-        /*
+        
         const initialized = ingredientTypes.reduce((acc, item) => {
             acc[item.ingredient_type_id] = {
                 ingredient_type_name: item.ingredient_type_name,
@@ -102,7 +108,10 @@ const RecipeForm = () => {
             };
             return acc;
         }, {});
-    setRecipeIngredients(initialized);*/
+    console.log(initialized);
+    setRecipeIngredients(initialized);
+    console.log(recipeIngredients);
+
     }
   }
 
@@ -160,12 +169,12 @@ const RecipeForm = () => {
         {Object.entries(ingredientTypeData).map(([typeId, typeData]) => (
           <div key={typeId}>
             <h4>{typeData.ingredient_type_name}</h4>
-            {/*} <ul>
+            {<ul>
               {typeData.ingredient_list.map((item, idx) => (
                 <li key={idx}>{item}</li>
               ))}
             </ul>
-            */}
+            }
           </div>
 
         ))}
