@@ -32,7 +32,7 @@ class IngredientType(models.Model):
     ing_type_id = models.AutoField(primary_key=True)
     # ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     ing_type_name = models.CharField(max_length=200, verbose_name="Ingredient Type Name")
-    recipe_type_id = models.ForeignKey(Formula, related_name='formula_ingredients', on_delete=models.CASCADE, verbose_name="Related Recipe Formula")
+    formula = models.ForeignKey(Formula, related_name='formula_ingredients', on_delete=models.CASCADE, verbose_name="Related Recipe Formula")
     ing_type_required = models.BooleanField(default=False, verbose_name="Required by Formula?")
     ing_type_multiple = models.BooleanField(default=True, verbose_name="Multiple of this Ingredient Allowed?")
     def __str__(self):

@@ -24,6 +24,7 @@ from .models import Formula, Ingredient, IngredientType, RecipeIngredient, Recip
 # Nested serializers like `recipeFormulaParts` and `recipeParts` require special handling
 # in the `create()` methods to properly save related objects.
 
+
 class IngredientTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientType
@@ -36,7 +37,7 @@ class FormulaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Formula
-        fields = ["recipe_type_name", "recipeFormulaParts"]
+        fields = ["formula_name", "recipeFormulaParts"]
     
     def create(self, validated_data):
         formula_ingredient_data = validated_data.pop('recipeFormulaParts')
@@ -49,7 +50,7 @@ class FormulaSerializer(serializers.ModelSerializer):
         print(f"Recipe Formula: {recipe_formula}")
         for ingredient_data in formula_ingredient_data:
             IngredientType.objects.create(
-                recipe_type_id=recipe_formula, 
+                formula=recipe_formula, 
                 **ingredient_data 
             )
         return recipe_formula

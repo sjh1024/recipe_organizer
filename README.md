@@ -22,7 +22,9 @@ npm run dev
 ```
 
 ### Using the Application
+You can access the frontend of the application from the address: 
 
+http://localhost:3000
 ## Features
 
 ### 1. Recipe Formulas

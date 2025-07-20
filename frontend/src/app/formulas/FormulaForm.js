@@ -16,7 +16,7 @@ this.state
     recipeNotes: ''
 };*/
 
-const RecipeForm = () => {
+const FormulaForm = () => {
 
     const [FormulaName, setFormulaName] = useState("");
     const [currentIngTypeName, setCurrentIngTypeName] = useState("");
@@ -50,7 +50,7 @@ const RecipeForm = () => {
         const url = 'http://localhost:8000/api/submit_formula'
 
         const formData = {
-            recipe_type_name: FormulaName,
+            formula_name: FormulaName,
             recipeFormulaParts: recipeFormulaParts,
         };
 
@@ -153,4 +153,4 @@ const RecipeForm = () => {
     
 }
 
-export default RecipeForm;
+export default FormulaForm;
