@@ -1,7 +1,28 @@
 from rest_framework import serializers
 
-from .models import Formula, Ingredient, IngredientType, RecipeIngredient
+from .models import Formula, Ingredient, IngredientType, RecipeIngredient, Recipe
 
+# serializers.py
+#
+# This file defines Django REST Framework serializers for various Models. 
+# Serializers handle conversion between model instances and JSON for API input/output.
+#
+# We're using ModelSerializers, which automatically map fields from the specified model.
+# The `Meta` inner class is required to specify:
+#   - `model`: which Django model this serializer is for
+#   - `fields`: which model fields to include (can also use `__all__`)
+#
+# For nested data (e.g., Formula with IngredientTypes), we override the `create()` method
+# to manually create related objects, since DRF does not support nested writes out of the box.
+#
+# Example:
+# class SomeSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = SomeModel
+#         fields = ['field1', 'field2']
+#
+# Nested serializers like `recipeFormulaParts` and `recipeParts` require special handling
+# in the `create()` methods to properly save related objects.
 
 class IngredientTypeSerializer(serializers.ModelSerializer):
     class Meta:

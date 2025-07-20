@@ -96,49 +96,18 @@ const RecipeForm = () => {
             setCurrentIngType("");
             setCurrentIngTypeId(0);
         }
+        console.log(ingredientTypeList);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const url = 'http://localhost:8000/api/submit_recipe'
-
-        const formData = {
-            recipe_name: recipeName,
-            ingredients: recipeIngredients,
-        };
-
-
-        // Handle form submission logic, e.g., send data to the server
-        console.log('Submitting the recipe formula', recipeIngredients);
-        console.log('The recipe formula you submitted is named: ', recipeName);
-        
-        // Perform the actual submission step
-        axios.post(url, formData)
-          
-            //Make sure that, on that page, if you decide to go back,
-            //the old data is still there. 
-
-            .then(response => {
-                console.log('Form data sent successfully:', response.data);
-                // Reset states
-
-                setRecipeName("");
-                setCurrentIngName("");
-                setCurrentIngType("");
-                setCurrentIngTypeId(0);
-                setrecipeIngredients([]);
-                
-            })
-            .catch(error => {
-                console.error('Error sending form data:', error);
-                alert('Error sending form data:', error);
-                // Handle errors, if any
-            });
-
+    const handleIngredientTypeChange = (event) => {
+        //event.preventDefault();
+        setCurrentIngTypeId(event.target.value);
         
         
     
     }
+
+
 
     return (
         <div>
@@ -166,7 +135,7 @@ const RecipeForm = () => {
 
                             <label htmlFor="ingredienttype">Ingredient Type:</label>
 
-                            <select id="ingredienttype" value={selectedIngredientType} onChange={(e) => setCurrentIngTypeId(e.target.value)}>
+                            <select id="ingredienttype" value={selectedIngredientType} onChange={(e) => setCurrentIngTypeId(e)}>
                             {ingredientTypeData.map((ingredient, index) => (
                              <option key={index} value={ingredient.ingredient_type_id}>
                                 {ingredient.ingredient_type_name}

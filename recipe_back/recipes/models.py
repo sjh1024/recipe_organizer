@@ -23,16 +23,7 @@ class Formula(models.Model):
     formula_id = models.AutoField(primary_key=True)
     formula_name = models.CharField(max_length=100, verbose_name="Recipe Formula Name")
     def __str__(self):
-        return self.recipe_type_name
-
-# Make sure that you find a way to make it "difficult" to delete ingredients...
-
-# Ingredient: A specific "mix-in" of type Ingredient Type that's part of a specific Recipe that is of a Recipe Type. 
-# EXAMPLES: Cheddar Cheese, Strawberry Jam, Furikake
-class Ingredient(models.Model):
-    ingredient_id = models.AutoField(primary_key=True)
-    ing_type_id = models.ForeignKey(IngredientType, on_delete=models.CASCADE)
-    ingredient_name = models.CharField(max_length=200)
+        return self.formula_name
 
 
 # Ingredient Type: A specific type of a "mix-in" in a broader category that can be a part of 1 or more recipes. 
@@ -46,6 +37,16 @@ class IngredientType(models.Model):
     ing_type_multiple = models.BooleanField(default=True, verbose_name="Multiple of this Ingredient Allowed?")
     def __str__(self):
         return self.ing_type_name
+
+# Make sure that you find a way to make it "difficult" to delete ingredients...
+
+# Ingredient: A specific "mix-in" of type Ingredient Type that's part of a specific Recipe that is of a Recipe Type. 
+# EXAMPLES: Cheddar Cheese, Strawberry Jam, Furikake
+class Ingredient(models.Model):
+    ingredient_id = models.AutoField(primary_key=True)
+    ing_type_id = models.ForeignKey(IngredientType, on_delete=models.CASCADE)
+    ingredient_name = models.CharField(max_length=200)
+
 
 # Recipe Requirement: A table for storing whether or not an ingredient type is required for a Recipe Type.
 # EXAMPLES: For a pizza, "Toppings" may not be required, but "Crust" is required.
