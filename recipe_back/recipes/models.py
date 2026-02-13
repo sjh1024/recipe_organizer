@@ -62,9 +62,9 @@ class Recipe(models.Model):
     recipe_type_id = models.ForeignKey(Formula, on_delete=models.CASCADE)
     recipe_name = models.CharField(max_length=200)
     # should be a value from 1-5 or 1-10, seems like we cant control that here so must do it elsewhere
-    recipe_rating = models.IntegerField()
-    recipe_description = models.CharField(max_length=1000)
-    recipe_comments = models.CharField(max_length=1000)
+    # recipe_rating = models.IntegerField()
+    # recipe_description = models.CharField(max_length=1000)
+    # recipe_comments = models.CharField(max_length=1000)
 
 # Recipe Ingredient: A specific Ingredient that is tied to a specific Recipe. 
 # EXAMPLES: Buffalo Sauce, with a recipe id of "Buffalo Chicken Pizza"

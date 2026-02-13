@@ -30,6 +30,14 @@ class IngredientTypeSerializer(serializers.ModelSerializer):
         model = IngredientType
         fields = ["ing_type_name", "ing_type_required"]
 
+class RecipeIngredientTypeSerializer(serializers.Serializer):
+    ingredient_type_id = serializers.CharField()
+    ingredient_type_name = serializers.CharField()
+    ingredient_list = serializers.ListField(
+        child=serializers.CharField(),
+        required=False
+    )
+
 # TODO: Make separate serializers for submitting and retrieving formulas. 
 class FormulaSerializer(serializers.ModelSerializer):
 
@@ -37,7 +45,7 @@ class FormulaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Formula
-        fields = ["formula_name", "recipeFormulaParts"]
+        fields = ["formula_id", "formula_name", "recipeFormulaParts"]
     
     def create(self, validated_data):
         formula_ingredient_data = validated_data.pop('recipeFormulaParts')
@@ -68,25 +76,43 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
 
-    recipeParts = IngredientSerializer(many=True)
+   
+    ingredientTypeData = RecipeIngredientTypeSerializer(
+        many=True,
+        write_only=True
+    )
 
     class Meta:
         model = Recipe
-        fields = ["recipe_name", "ingredients"]
-    
+        fields = ["recipe_name", "ingredientTypeData", "recipe_type_id"]
+
     def create(self, validated_data):
-        recipe_ingredient_data = validated_data.pop('recipeParts')
-       
-        print(f"Validated Data:{validated_data}")
-        print(f"Recipe Ingredient Data:{recipe_ingredient_data}")
-        
+
+        ingredient_type_data = validated_data.pop('ingredientTypeData', [])
         recipe = Recipe.objects.create(**validated_data)
-        
-        print(f"Recipe: {recipe}")
-        for ingredient_data in recipe_ingredient_data:
-            Ingredient.objects.create(
-               # ing_type_id=recipe_formula, 
-                **ingredient_data 
-            )
+
+        for type_data in ingredient_type_data:
+
+            ingredient_type_id = type_data.get("ingredient_type_id")
+            ingredient_names = type_data.get("ingredient_list", [])
+
+            # get IngredientType
+            try:
+                ingredient_type = IngredientType.objects.get(pk=ingredient_type_id)
+            except IngredientType.DoesNotExist:
+                continue
+
+            for ingredient_name in ingredient_names:
+
+                ingredient, created = Ingredient.objects.get_or_create(
+                    ingredient_name=ingredient_name
+                )
+
+                RecipeIngredient.objects.create(
+                    recipe=recipe,
+                    ingredient_type=ingredient_type,
+                    ingredient=ingredient
+                )
+
         return recipe
 

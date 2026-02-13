@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const RecipeForm = () => {
@@ -9,6 +9,7 @@ const RecipeForm = () => {
   const [currentIngTypeId, setCurrentIngTypeId] = useState("");
   const [formulaList, setFormulaList] = useState([]);
   const [selectedFormula, setSelectedFormula] = useState("");
+  const [selectedFormulaId, setSelectedFormulaId] = useState("");
   const [selectedIngredientType, setSelectedIngredientType] = useState("");
   const [loadingFormulas, setLoadingFormulas] = useState(true);
   const [error, setError] = useState(null);
@@ -18,17 +19,17 @@ const RecipeForm = () => {
 
   useEffect(() => {
     axios.get("http://localhost:8000/api/formulas/")
-        .then((response) => {
-            setFormulaList(response.data);
-            console.log(response.data);
-            setLoadingFormulas(false);
-        })
-        .catch((err) => {
-            console.error("Error fetching formulas:", err);
-            setError("Failed to load formulas");
-            setLoadingFormulas(false);
-        });
-  }, []);  
+      .then((response) => {
+        setFormulaList(response.data);
+        console.log(response.data);
+        setLoadingFormulas(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching formulas:", err);
+        setError("Failed to load formulas");
+        setLoadingFormulas(false);
+      });
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -36,8 +37,10 @@ const RecipeForm = () => {
 
     const formData = {
       recipe_name: recipeName,
-      recipeIngredients: recipeIngredients,
+      ingredientTypeData: ingredientTypeData,
+      recipe_type_id: selectedFormulaId
     };
+    console.log(formData);
 
     axios.post(url, formData)
       .then(response => {
@@ -63,15 +66,15 @@ const RecipeForm = () => {
     }
 
     setIngredientTypeData(prev =>
-        prev.map((item) =>
-          item.ingredient_type_id === currentIngTypeId
-            ? {
-                ...item,
-                ingredient_list: [...item.ingredient_list, trimmedName],
-              }
-            : item
-        )
-      );
+      prev.map((item) =>
+        item.ingredient_type_id === currentIngTypeId
+          ? {
+            ...item,
+            ingredient_list: [...item.ingredient_list, trimmedName],
+          }
+          : item
+      )
+    );
 
     console.log(currentIngTypeId);
     console.log(trimmedName);
@@ -83,57 +86,75 @@ const RecipeForm = () => {
   };
 
   const handleFormulaChange = (e) => {
-    const selectedName = e.target.value;
-    setSelectedFormula(selectedName);
-    
+    const formulaId = e.target.value;
+    setSelectedFormulaId(formulaId);
+
     const selectedFormulaObject = formulaList.find(
-        (f) => f.formula_name === selectedName
+      (f) => String(f.formula_id) === String(formulaId)
     );
 
-    if (selectedFormulaObject) {
-        const parts = selectedFormulaObject.recipeFormulaParts || [];
-        
-        // Generate ingredient type list (give fallback ID if not available)
-        const ingredientTypes = parts.map((part, index) => ({
-            ingredient_type_id: `${index}`,
-            ingredient_type_name: part.ing_type_name,
-            ingredient_list: []
-        }));
-        setIngredientTypeData(ingredientTypes);
-        
-        const initialized = ingredientTypes.reduce((acc, item) => {
-            acc[item.ingredient_type_id] = {
-                ingredient_type_name: item.ingredient_type_name,
-                ingredient_list: []
-            };
-            return acc;
-        }, {});
+    if (!selectedFormulaObject) {
+      console.error("Selected formula not found in the formula list.");
+      return;
+    }
+
+
+    const parts = selectedFormulaObject.recipeFormulaParts || [];
+
+    // Generate ingredient type list (give fallback ID if not available)
+    const ingredientTypes = parts.map((part, index) => ({
+      ingredient_type_id: `${index}`,
+      ingredient_type_name: part.ing_type_name,
+      ingredient_list: []
+    }));
+    setIngredientTypeData(ingredientTypes);
+
+    const initialized = ingredientTypes.reduce((acc, item) => {
+      acc[item.ingredient_type_id] = {
+        ingredient_type_name: item.ingredient_type_name,
+        ingredient_list: []
+      };
+      return acc;
+    }, {});
     console.log(initialized);
     setRecipeIngredients(initialized);
     console.log(recipeIngredients);
 
-    }
+
   }
 
   return (
     <div>
       <form className="form-container" onSubmit={handleSubmit}>
+        <label htmlFor="recipename">Recipe Name:</label>
+        <input
+          type="text"
+          id="recipename"
+          placeholder="Recipe Name"
+          value={recipeName}
+          onChange={(e) => setRecipeName(e.target.value)}
+        />
         <label htmlFor="formula">Recipe Formula:</label>
         {loadingFormulas ? (
-            <p>Loading...</p>
+          <p>Loading...</p>
         ) : error ? (
-            <p>{error}</p>
+          <p>{error}</p>
         ) : (
-       
-        <select
-          id="formula"
-          value={selectedFormula}
-          onChange={handleFormulaChange}
-        >
-          {formulaList.map((formula, index) => (
-            <option key={index} value={formula.formula_name}>{formula.formula_name}</option>
-          ))}
-        </select>
+
+          <select
+            id="formula"
+            value={selectedFormulaId}
+            onChange={handleFormulaChange}
+          >
+
+            {selectedFormulaId === "" && (
+              <option value="">Select a Formula</option>
+            )}
+
+            {formulaList.map((formula, index) => (
+              <option key={index} value={formula.formula_id}>{formula.formula_name}</option>
+            ))}
+          </select>
 
         )}
 
