@@ -28,7 +28,7 @@ from .models import Formula, Ingredient, IngredientType, RecipeIngredient, Recip
 class IngredientTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientType
-        fields = ["ing_type_name", "ing_type_required"]
+        fields = ["id", "ing_type_name", "ing_type_required"]
 
 class RecipeIngredientTypeSerializer(serializers.Serializer):
     ingredient_type_id = serializers.CharField()
@@ -89,17 +89,21 @@ class RecipeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
 
         ingredient_type_data = validated_data.pop('ingredientTypeData', [])
+        print("Ingredient Type Data:", ingredient_type_data)
         recipe = Recipe.objects.create(**validated_data)
 
         for type_data in ingredient_type_data:
 
+            print("Type Data:", type_data)
             ingredient_type_id = type_data.get("ingredient_type_id")
             ingredient_names = type_data.get("ingredient_list", [])
 
             # get IngredientType
             try:
                 ingredient_type = IngredientType.objects.get(pk=ingredient_type_id)
+                print(f"Found IngredientType: {ingredient_type}")
             except IngredientType.DoesNotExist:
+                print(f"IngredientType with id {ingredient_type_id} does not exist.")
                 continue
 
             for ingredient_name in ingredient_names:
@@ -108,11 +112,14 @@ class RecipeSerializer(serializers.ModelSerializer):
                     ingredient_name=ingredient_name
                 )
 
+                print("Ingredient:", ingredient, "created:", created)
+
                 RecipeIngredient.objects.create(
                     recipe=recipe,
                     ingredient_type=ingredient_type,
                     ingredient=ingredient
                 )
+                print("Created RecipeIngredient:", recipe_ing.id)
 
         return recipe
 

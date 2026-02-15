@@ -65,6 +65,8 @@ class Recipe(models.Model):
     # recipe_rating = models.IntegerField()
     # recipe_description = models.CharField(max_length=1000)
     # recipe_comments = models.CharField(max_length=1000)
+    def __str__(self):
+        return self.recipe_name
 
 # Recipe Ingredient: A specific Ingredient that is tied to a specific Recipe. 
 # EXAMPLES: Buffalo Sauce, with a recipe id of "Buffalo Chicken Pizza"
